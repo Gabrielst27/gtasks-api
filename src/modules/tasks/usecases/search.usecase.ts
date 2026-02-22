@@ -10,43 +10,47 @@ import {
   AppQueryProps,
 } from 'src/common/utils/app-queries/app-query';
 import { TaskResponse } from 'src/modules/tasks/dtos/responses/task-response.dto';
-import { TaskEntity } from 'src/domain/tasks/entities/task-entity';
 import { ITaskRepository } from 'src/domain/tasks/repositories/task-repository';
+import { BaseSearchTaskUseCase } from 'src/modules/tasks/usecases/base-search.usecase';
 
-export namespace FindManyTasksUseCase {
+export namespace SearchTasksUseCase {
   export type Input = {
     projectId: string;
     searchProps: SearchProps;
-    queriesProps?: AppQueryProps[];
+    queriesProps: AppQueryProps[];
   };
   export type Output = SearchResult<TaskResponse.Dto>;
 
-  export class UseCase implements IUseCase<Input, Output> {
-    constructor(private repository: ITaskRepository) {}
+  class UseCase
+    extends BaseSearchTaskUseCase
+    implements IUseCase<Input, Output>
+  {
+    constructor(private repository: ITaskRepository) {
+      super();
+    }
 
     async execute(input: Input): Promise<Output> {
       const { projectId, searchProps, queriesProps } = input;
       if (!projectId) {
         throw new BadRequestException('Busca Inválida');
       }
-      const searchParams = new SearchParams(searchProps);
-      const appQueries = queriesProps
-        ? queriesProps.map((query) => new AppQuery(query))
-        : [];
+      if (queriesProps.length) {
+        const fields = queriesProps.map((query) => query.field);
+        super.validateSearchFields(fields);
+      }
+      if (searchProps.sort) {
+        super.validateSortField(searchProps.sort);
+      }
+      const searchParams = super.makeSearchParams(searchProps);
+      const appQueries = super.makeAppQueries(queriesProps);
       const result = await this.repository.findMany(searchParams, appQueries);
-      return this.convertToResponse(result);
+      return super.convertToResponse(result);
     }
+  }
 
-    convertToResponse(
-      result: SearchResult<TaskEntity>,
-    ): SearchResult<TaskResponse.Dto> {
-      const responses = result.items.map((entity) =>
-        TaskResponse.Mapper.toResponse(entity),
-      );
-      return {
-        ...result,
-        items: responses,
-      };
+  export class Factory {
+    static create(repository: ITaskRepository): UseCase {
+      return new UseCase(repository);
     }
   }
 }

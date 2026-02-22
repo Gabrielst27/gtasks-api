@@ -1,6 +1,5 @@
 import { BadRequestException, NotFoundException } from '@nestjs/common';
 import { EDbOperators } from 'src/common/enum/db-operators.enum';
-import { BaseRepository } from 'src/common/repositories/repository';
 import { SearchParams } from 'src/common/repositories/search-params';
 import { SearchResult } from 'src/common/repositories/search-result';
 import { AppQuery } from 'src/common/utils/app-queries/app-query';
@@ -9,26 +8,8 @@ import { TaskEntity } from 'src/domain/tasks/entities/task-entity';
 import { TaskPrismaModelMapper } from 'src/modules/tasks/repositories/prisma/task-prisma-model.mapper';
 import { ITaskRepository } from 'src/domain/tasks/repositories/task-repository';
 
-export class TaskPrismaRepository
-  extends BaseRepository
-  implements ITaskRepository
-{
-  protected searchableFields: string[] = [
-    'projectId',
-    'title',
-    'assigneeId',
-    'createdById',
-  ];
-  protected sortableFields: string[] = [
-    'title',
-    'createdAt',
-    'updatedAt',
-    'dueDate',
-  ];
-
-  constructor(private prismaService: PrismaService) {
-    super();
-  }
+export class TaskPrismaRepository implements ITaskRepository {
+  constructor(private prismaService: PrismaService) {}
 
   async findById(id: string): Promise<TaskEntity> {
     const model = await this.prismaService.task.findUnique({
@@ -42,13 +23,6 @@ export class TaskPrismaRepository
     searchParams: SearchParams,
     queries: AppQuery[],
   ): Promise<SearchResult<TaskEntity>> {
-    const searchFields = queries.map((query) => query.field);
-    super.validateQuery(searchFields, searchParams.sort);
-    const haveProjectId = searchFields.includes('projectId');
-    if (!haveProjectId) {
-      throw new BadRequestException('Task deve estar vinculada a um projeto');
-    }
-
     const skip = searchParams.perPage * searchParams.page;
     const take = searchParams.perPage;
 

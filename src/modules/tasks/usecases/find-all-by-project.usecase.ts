@@ -6,7 +6,7 @@ import { IUseCase } from 'src/common/usecases/usecase.interface';
 import { AppQueryProps } from 'src/common/utils/app-queries/app-query';
 import { TaskResponse } from 'src/modules/tasks/dtos/responses/task-response.dto';
 import { ITaskRepository } from 'src/domain/tasks/repositories/task-repository';
-import { FindManyTasksUseCase } from 'src/modules/tasks/usecases/find-many.usecase';
+import { SearchTasksUseCase } from 'src/modules/tasks/usecases/search.usecase';
 
 export namespace FindAllTasksByProjectUseCase {
   export type Input = {
@@ -29,7 +29,7 @@ export namespace FindAllTasksByProjectUseCase {
         operator: EDbOperators.EQUALS,
         value: projectId,
       };
-      const findMany = new FindManyTasksUseCase.UseCase(this.repository);
+      const findMany = SearchTasksUseCase.Factory.create(this.repository);
       return await findMany.execute({
         projectId,
         searchProps: params,

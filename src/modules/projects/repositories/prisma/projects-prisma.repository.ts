@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { EDbOperators } from 'src/common/enum/db-operators.enum';
-import { BaseRepository } from 'src/common/repositories/repository';
 import { SearchParams } from 'src/common/repositories/search-params';
 import { SearchResult } from 'src/common/repositories/search-result';
 import { AppQuery } from 'src/common/utils/app-queries/app-query';
@@ -10,16 +9,11 @@ import { IProjectRepository } from 'src/domain/projects/repositories/projects.re
 import { PrismaService } from 'src/modules/shared/prisma/prisma.service';
 
 @Injectable()
-export class ProjectsPrismaRepository
-  extends BaseRepository
-  implements IProjectRepository
-{
+export class ProjectsPrismaRepository implements IProjectRepository {
   protected searchableFields: string[] = ['createdAt', 'updatedAt', 'name'];
   protected sortableFields: string[] = ['createdAt', 'updatedAt'];
 
-  constructor(private prismaService: PrismaService) {
-    super();
-  }
+  constructor(private prismaService: PrismaService) {}
 
   async findById(id: string): Promise<ProjectEntity> {
     const model = await this.prismaService.project.findFirst({
@@ -36,9 +30,6 @@ export class ProjectsPrismaRepository
     params: SearchParams,
     queries: AppQuery[],
   ): Promise<SearchResult<ProjectEntity>> {
-    const fields = queries.map((query) => query.field);
-    super.validateQuery(fields, params.sort);
-
     const skip = params.page * params.perPage;
     const take = params.perPage;
 

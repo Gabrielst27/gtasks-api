@@ -1,6 +1,5 @@
 import { NotFoundException } from '@nestjs/common';
 import { EDbOperators } from 'src/common/enum/db-operators.enum';
-import { BaseRepository } from 'src/common/repositories/repository';
 import { SearchParams } from 'src/common/repositories/search-params';
 import { SearchResult } from 'src/common/repositories/search-result';
 import { AppQuery } from 'src/common/utils/app-queries/app-query';
@@ -9,16 +8,11 @@ import { IUserRepository } from 'src/domain/users/repositories/user.repository';
 import { PrismaService } from 'src/modules/shared/prisma/prisma.service';
 import { UserPrismaModelMapper } from 'src/modules/users/repositories/user-prisma-model.mapper';
 
-export class UserPrismaRepository
-  extends BaseRepository
-  implements IUserRepository
-{
+export class UserPrismaRepository implements IUserRepository {
   protected searchableFields: string[] = ['createdAt', 'updatedAt'];
   protected sortableFields: string[] = ['createdAt', 'updatedAt'];
 
-  constructor(private prismaService: PrismaService) {
-    super();
-  }
+  constructor(private prismaService: PrismaService) {}
 
   async findById(id: string): Promise<UserEntity> {
     const model = await this.prismaService.user.findUnique({ where: { id } });
@@ -32,9 +26,6 @@ export class UserPrismaRepository
     params: SearchParams,
     queries: AppQuery[],
   ): Promise<SearchResult<UserEntity>> {
-    const searchFields = queries.map((query) => query.field);
-    super.validateQuery(searchFields, params.sort);
-
     const skip = params.perPage * params.page;
     const take = params.perPage;
 
