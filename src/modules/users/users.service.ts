@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { SearchManyRequestDto } from 'src/common/dtos/requests/search-many-request.dto';
 import { SearchResult } from 'src/common/repositories/search-result';
 import { IUserRepository } from 'src/domain/users/repositories/user.repository';
+import { ICryptography } from 'src/modules/shared/cryptography/cryptography.interface';
 import { CreateUserRequestDto } from 'src/modules/users/dtos/requests/create-user-request.dto';
 import { UserRequestDto } from 'src/modules/users/dtos/requests/user-request.dto';
 import { UserResponse } from 'src/modules/users/dtos/responses/user-response.dto';
@@ -12,7 +13,10 @@ import { UpdateUserUseCase } from 'src/modules/users/usecases/update.usecase';
 
 @Injectable()
 export class UsersService {
-  constructor(private repository: IUserRepository) {}
+  constructor(
+    private repository: IUserRepository,
+    private cryptography: ICryptography,
+  ) {}
 
   async findById(id: string): Promise<UserResponse.Dto> {
     const usecase = new FindUserByIdUseCase.UseCase(this.repository);
@@ -27,7 +31,10 @@ export class UsersService {
   }
 
   async create(data: CreateUserRequestDto): Promise<UserResponse.Dto> {
-    const usecase = new CreateUserUseCase.UseCase(this.repository);
+    const usecase = new CreateUserUseCase.UseCase(
+      this.repository,
+      this.cryptography,
+    );
     return await usecase.execute(data);
   }
 

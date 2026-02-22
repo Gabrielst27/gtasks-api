@@ -8,7 +8,13 @@ import { TasksModule } from './modules/tasks/tasks.module';
 import { UsersModule } from './modules/users/users.module';
 
 @Module({
-  imports: [ProjectsModule, SharedModule, ConfigModule.forRoot(), TasksModule, UsersModule],
+  imports: [
+    ProjectsModule,
+    SharedModule,
+    ConfigModule.forRoot(),
+    TasksModule,
+    UsersModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })
