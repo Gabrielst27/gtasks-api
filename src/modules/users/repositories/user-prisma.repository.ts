@@ -1,4 +1,6 @@
 import { NotFoundException } from '@nestjs/common';
+import { EDbOperators } from 'src/common/enum/db-operators.enum';
+import { BaseRepository } from 'src/common/repositories/repository';
 import { SearchParams } from 'src/common/repositories/search-params';
 import { SearchResult } from 'src/common/repositories/search-result';
 import { AppQuery } from 'src/common/utils/app-queries/app-query';
@@ -7,8 +9,16 @@ import { IUserRepository } from 'src/domain/users/repositories/user.repository';
 import { PrismaService } from 'src/modules/shared/prisma/prisma.service';
 import { UserPrismaModelMapper } from 'src/modules/users/repositories/user-prisma-model.mapper';
 
-export class UserPrismaRepository implements IUserRepository {
-  constructor(private prismaService: PrismaService) {}
+export class UserPrismaRepository
+  extends BaseRepository
+  implements IUserRepository
+{
+  protected searchableFields: string[] = ['createdAt', 'updatedAt'];
+  protected sortableFields: string[] = ['createdAt', 'updatedAt'];
+
+  constructor(private prismaService: PrismaService) {
+    super();
+  }
 
   async findById(id: string): Promise<UserEntity> {
     const model = await this.prismaService.user.findUnique({ where: { id } });
@@ -18,11 +28,60 @@ export class UserPrismaRepository implements IUserRepository {
     return UserPrismaModelMapper.toEntity(model);
   }
 
-  findMany(
+  async findMany(
     params: SearchParams,
     queries: AppQuery[],
   ): Promise<SearchResult<UserEntity>> {
-    throw new Error('Method not implemented.');
+    const searchFields = queries.map((query) => query.field);
+    super.validateQuery(searchFields, params.sort);
+
+    const skip = params.perPage * params.page;
+    const take = params.perPage;
+
+    const filters = await this.prismaService.$extends({
+      query: {
+        user: {
+          count({ model, operation, args, query }) {
+            args.where = {
+              AND: queries.map((q) => ({
+                [q.field]:
+                  q.operator === EDbOperators.EQUALS
+                    ? q.value
+                    : [UserPrismaModelMapper.operatorToModelEnum(q.operator)],
+              })),
+            };
+            return query(args);
+          },
+          findMany({ model, operation, args, query }) {
+            args.where = {
+              AND: queries.map((q) => ({
+                [q.field]:
+                  q.operator === EDbOperators.EQUALS
+                    ? q.value
+                    : [UserPrismaModelMapper.operatorToModelEnum(q.operator)],
+              })),
+            };
+            args.orderBy = { [params.sort]: params.sortDir };
+            args.skip = skip;
+            args.take = take;
+            return query(args);
+          },
+        },
+      },
+    });
+
+    const total = await filters.user.count();
+    const models = await filters.user.findMany();
+    const items = models.map((model) => UserPrismaModelMapper.toEntity(model));
+
+    return new SearchResult({
+      items,
+      total,
+      page: params.page,
+      perPage: params.perPage,
+      sort: params.sort,
+      sortDir: params.sortDir,
+    });
   }
 
   async create(item: UserEntity): Promise<UserEntity> {

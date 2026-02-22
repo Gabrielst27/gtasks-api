@@ -1,4 +1,5 @@
 import { Role, User } from 'generated/prisma/client';
+import { EDbOperators } from 'src/common/enum/db-operators.enum';
 import { UserEntity } from 'src/domain/users/entities/user-entity';
 import { Role as AppRole } from 'src/domain/users/enum/role.enum';
 
@@ -37,5 +38,20 @@ export class UserPrismaModelMapper {
       admin: Role.ADMIN,
     };
     return mapper[role];
+  }
+
+  static operatorToModelEnum(opEnum: EDbOperators) {
+    const mapper = {
+      equal: 'equals',
+      in: 'in',
+      not_in: 'notin',
+      lesser_than: 'lt',
+      lesser_than_or_equal: 'lte',
+      greater_than: 'gt',
+      greater_than_or_equal: 'gte',
+      not: 'not',
+      contains: 'contains',
+    };
+    return mapper[opEnum];
   }
 }
