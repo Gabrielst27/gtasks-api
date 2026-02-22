@@ -20,6 +20,7 @@ export class UserPrismaModelMapper {
     const json = entity.toJson();
     return {
       ...json,
+      avatar: json.avatar || null,
       role: UserPrismaModelMapper.roleToModelEnum(json.role),
     };
   }
