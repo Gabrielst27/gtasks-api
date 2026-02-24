@@ -10,6 +10,7 @@ export namespace ProjectResponse {
     id: string;
     name: string;
     description: string;
+    createdById: string;
     createdAt: string;
     updatedAt: string;
   };
@@ -43,6 +44,7 @@ export namespace ProjectResponse {
       this.id = props.id;
       this.name = props.name;
       this.description = props.description;
+      this.createdById = props.createdById;
       this.createdAt = props.createdAt.toISOString();
       this.updatedAt = props.updatedAt.toISOString();
     }
