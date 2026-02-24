@@ -8,6 +8,7 @@ import { FindProjectByIdUseCase } from 'src/modules/projects/usecases/find-by-id
 import { UpdateProjectUseCase } from 'src/modules/projects/usecases/update.usecase';
 import { FindAllProjectsUseCase } from 'src/modules/projects/usecases/find-all.usecase';
 import { SearchResult } from 'src/common/repositories/search-result';
+import { FindProjectBySlugUseCase } from 'src/modules/projects/usecases/find-by-slug.usecase';
 
 @Injectable()
 export class ProjectsService {
@@ -21,6 +22,11 @@ export class ProjectsService {
   async findById(id: string) {
     const usecase = new FindProjectByIdUseCase.UseCase(this.repository);
     return await usecase.execute({ id });
+  }
+
+  async findBySlug(slug: string) {
+    const usecase = new FindProjectBySlugUseCase.UseCase(this.repository);
+    return await usecase.execute({ slug });
   }
 
   async create(author: string, data: ProjectRequestDto) {

@@ -90,6 +90,7 @@ export namespace TaskResponse {
       this.id = props.id;
       this.title = props.title;
       this.description = props.description;
+      this.slug = props.slug;
       this.status = props.status;
       this.priority = props.priority;
       this.projectId = props.projectId;

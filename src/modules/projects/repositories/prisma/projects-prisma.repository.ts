@@ -15,6 +15,16 @@ export class ProjectsPrismaRepository implements IProjectRepository {
 
   constructor(private prismaService: PrismaService) {}
 
+  async findBySlug(slug: string): Promise<ProjectEntity> {
+    const model = await this.prismaService.project.findUnique({
+      where: { slug },
+    });
+    if (!model) {
+      throw new NotFoundException('Projeto não encontrado');
+    }
+    return ProjectPrismaModelMapper.toEntity(model);
+  }
+
   async findById(id: string): Promise<ProjectEntity> {
     const model = await this.prismaService.project.findFirst({
       where: { id },

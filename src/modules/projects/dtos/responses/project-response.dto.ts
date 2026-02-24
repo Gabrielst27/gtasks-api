@@ -48,6 +48,7 @@ export namespace ProjectResponse {
       this.id = props.id;
       this.name = props.name;
       this.description = props.description;
+      this.slug = props.slug;
       this.createdById = props.createdById;
       this.createdAt = props.createdAt.toISOString();
       this.updatedAt = props.updatedAt.toISOString();
