@@ -29,6 +29,10 @@ export namespace ProjectResponse {
     description: string;
 
     @IsNotEmpty()
+    @ApiProperty({ description: 'Slug do projeto' })
+    slug: string;
+
+    @IsNotEmpty()
     @ApiProperty({ description: 'ID do criador do projeto' })
     createdById: string;
 

@@ -8,7 +8,6 @@ import { ITaskRepository } from 'src/domain/tasks/repositories/task-repository';
 export namespace CreateTaskUseCase {
   export type Input = CreateTaskRequestDto & {
     createdById: string;
-    assigneeId: string;
   };
 
   export type Output = TaskResponse.Dto;

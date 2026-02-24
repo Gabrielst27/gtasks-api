@@ -4,6 +4,7 @@ export type ProjectEntityProps = {
   name: string;
   description?: string;
   createdById: string;
+  slug: string;
 } & EntityProps;
 
 export class ProjectEntity extends Entity<ProjectEntityProps> {

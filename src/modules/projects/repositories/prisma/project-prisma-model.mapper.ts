@@ -11,6 +11,7 @@ export class ProjectPrismaModelMapper {
         createdById: model.createdById,
         createdAt: model.createdAt,
         updatedAt: model.updatedAt,
+        slug: model.slug,
       },
       model.id,
     );
@@ -22,6 +23,7 @@ export class ProjectPrismaModelMapper {
       id: json.id,
       name: json.name,
       description: json.description,
+      slug: json.slug,
       createdById: json.createdById,
       createdAt: json.createdAt,
       updatedAt: json.updatedAt,

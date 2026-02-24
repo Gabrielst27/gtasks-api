@@ -5,6 +5,7 @@ import { TaskStatus } from 'src/domain/tasks/enums/status';
 export type TaskEntityProps = {
   title: string;
   description?: string;
+  slug: string;
   status?: TaskStatus;
   priority?: TaskPriority;
   dueDate?: Date;

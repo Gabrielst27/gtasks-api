@@ -21,6 +21,11 @@ export class TaskRequestDto {
   @ApiProperty({ description: 'Descrição da tarefa', required: false })
   description?: string;
 
+  @IsNotEmpty({ message: 'slug não pode estar vazio' })
+  @IsString({ message: 'slug deve ser uma string' })
+  @ApiProperty({ description: 'Slug da tarefa' })
+  slug: string;
+
   @IsOptional({ message: 'status não pode estar vazio' })
   @IsEnum(TaskStatus, {
     message:

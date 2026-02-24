@@ -34,6 +34,10 @@ export namespace TaskResponse {
     description: string;
 
     @IsNotEmpty()
+    @ApiProperty({ description: 'Slug do projeto' })
+    slug: string;
+
+    @IsNotEmpty()
     @ApiProperty({
       description: 'Status da tarefa',
       enum: TaskStatus,
