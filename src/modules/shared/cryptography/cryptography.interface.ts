@@ -1,4 +1,4 @@
 export interface ICryptography {
-  generateHash(password: string): string;
-  verifyPassword(password: string, hash: string): boolean;
+  generateHash(password: string): Promise<string>;
+  verifyPassword(password: string, hash: string): Promise<boolean>;
 }

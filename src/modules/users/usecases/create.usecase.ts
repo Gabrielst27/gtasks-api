@@ -22,7 +22,7 @@ export namespace CreateUserUseCase {
       if (!name || !email || !password) {
         throw new BadRequestException('Dados inválidos');
       }
-      const hash = this.cryptography.generateHash(password);
+      const hash = await this.cryptography.generateHash(password);
       //TODO: implement avatar storage
       const user = new UserEntity({ ...input, password: hash });
       const result = await this.repository.create(user);
