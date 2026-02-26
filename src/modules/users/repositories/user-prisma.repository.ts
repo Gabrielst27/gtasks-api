@@ -1,4 +1,4 @@
-import { NotFoundException } from '@nestjs/common';
+import { ConflictException, NotFoundException } from '@nestjs/common';
 import { EDbOperators } from 'src/common/enum/db-operators.enum';
 import { SearchParams } from 'src/common/repositories/search-params';
 import { SearchResult } from 'src/common/repositories/search-result';
@@ -20,6 +20,15 @@ export class UserPrismaRepository implements IUserRepository {
       throw new NotFoundException('Usuário não encontrado');
     }
     return UserPrismaModelMapper.toEntity(model);
+  }
+
+  async emailExists(email: string): Promise<void> {
+    const model = await this.prismaService.user.findUnique({
+      where: { email },
+    });
+    if (model) {
+      throw new ConflictException('Email já registrado');
+    }
   }
 
   async findMany(

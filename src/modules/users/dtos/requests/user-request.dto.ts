@@ -1,14 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
 import {
-  IsEmail,
   IsNotEmpty,
   IsOptional,
-  IsString,
   IsUrl,
   Matches,
   MaxLength,
   MinLength,
 } from 'class-validator';
+import { UserEntityProps } from 'src/domain/users/entities/user-entity';
 
 export class UserRequestDto {
   @IsNotEmpty({ message: 'O nome não pode estar vazio' })
@@ -27,4 +26,13 @@ export class UserRequestDto {
     required: false,
   })
   avatar?: string;
+
+  constructor(
+    props: Omit<
+      UserEntityProps,
+      'password' | 'email' | 'role' | 'createdAt' | 'updatedAt'
+    >,
+  ) {
+    ((this.name = props.name), (this.avatar = props.avatar));
+  }
 }

@@ -3,7 +3,7 @@ import { SearchManyRequestDto } from 'src/common/dtos/requests/search-many-reque
 import { SearchResult } from 'src/common/repositories/search-result';
 import { IUserRepository } from 'src/domain/users/repositories/user.repository';
 import { ICryptography } from 'src/modules/shared/cryptography/cryptography.interface';
-import { CreateUserRequestDto } from 'src/modules/users/dtos/requests/create-user-request.dto';
+import { CreateUserRequest } from 'src/modules/users/dtos/requests/create-user-request.dto';
 import { UserRequestDto } from 'src/modules/users/dtos/requests/user-request.dto';
 import { UserResponse } from 'src/modules/users/dtos/responses/user-response.dto';
 import { CreateUserUseCase } from 'src/modules/users/usecases/create.usecase';
@@ -30,7 +30,7 @@ export class UsersService {
     return await usecase.execute(params);
   }
 
-  async create(data: CreateUserRequestDto): Promise<UserResponse.Dto> {
+  async create(data: CreateUserRequest.Dto): Promise<UserResponse.Dto> {
     const usecase = new CreateUserUseCase.UseCase(
       this.repository,
       this.cryptography,

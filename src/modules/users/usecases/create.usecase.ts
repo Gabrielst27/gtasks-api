@@ -3,11 +3,11 @@ import { IUseCase } from 'src/common/usecases/usecase.interface';
 import { UserEntity } from 'src/domain/users/entities/user-entity';
 import { IUserRepository } from 'src/domain/users/repositories/user.repository';
 import { ICryptography } from 'src/modules/shared/cryptography/cryptography.interface';
-import { CreateUserRequestDto } from 'src/modules/users/dtos/requests/create-user-request.dto';
+import { CreateUserRequest } from 'src/modules/users/dtos/requests/create-user-request.dto';
 import { UserResponse } from 'src/modules/users/dtos/responses/user-response.dto';
 
 export namespace CreateUserUseCase {
-  export type Input = CreateUserRequestDto;
+  export type Input = CreateUserRequest.Dto;
 
   export type Output = UserResponse.Dto;
 
@@ -22,6 +22,7 @@ export namespace CreateUserUseCase {
       if (!name || !email || !password) {
         throw new BadRequestException('Dados inválidos');
       }
+      await this.repository.emailExists(email);
       const hash = await this.cryptography.generateHash(password);
       //TODO: implement avatar storage
       const user = new UserEntity({ ...input, password: hash });

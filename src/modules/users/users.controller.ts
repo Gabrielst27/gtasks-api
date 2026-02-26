@@ -13,7 +13,7 @@ import {
 import { ApiResponse } from '@nestjs/swagger';
 import { SearchManyRequestDto } from 'src/common/dtos/requests/search-many-request.dto';
 import { SearchResult } from 'src/common/repositories/search-result';
-import { CreateUserRequestDto } from 'src/modules/users/dtos/requests/create-user-request.dto';
+import { CreateUserRequest } from 'src/modules/users/dtos/requests/create-user-request.dto';
 import { UserRequestDto } from 'src/modules/users/dtos/requests/user-request.dto';
 import { UserResponse } from 'src/modules/users/dtos/responses/user-response.dto';
 import { UsersService } from 'src/modules/users/users.service';
@@ -46,7 +46,7 @@ export class UsersController {
   @ApiResponse({
     type: UserResponse.Dto,
   })
-  create(@Body() data: CreateUserRequestDto) {
+  create(@Body() data: CreateUserRequest.Dto) {
     return this.service.create(data);
   }
 
