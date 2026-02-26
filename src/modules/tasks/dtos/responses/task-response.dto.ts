@@ -94,6 +94,8 @@ export namespace TaskResponse {
       this.status = props.status;
       this.priority = props.priority;
       this.projectId = props.projectId;
+      this.assigneeId = props.assigneeId;
+      this.createdById = props.createdById;
       this.createdAt = props.createdAt.toISOString();
       this.updatedAt = props.updatedAt.toISOString();
       this.dueDate = props.dueDate ? props.dueDate.toISOString() : '';
