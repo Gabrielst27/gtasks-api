@@ -2,25 +2,12 @@ import { Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { UsersModule } from 'src/modules/users/users.module';
-import { JwtModule, JwtService } from '@nestjs/jwt';
-import { UsersService } from 'src/modules/users/users.service';
-import { IUserRepository } from 'src/domain/users/repositories/user.repository';
+import { PassportModule } from '@nestjs/passport';
+import { AuthJwtModule } from './jwt/jwt.module';
 
 @Module({
-  imports: [UsersModule, JwtModule],
+  imports: [UsersModule, PassportModule, AuthJwtModule],
   controllers: [AuthController],
-  providers: [
-    {
-      provide: AuthService,
-      useFactory: (
-        usersService: UsersService,
-        jwtService: JwtService,
-        repository: IUserRepository,
-      ) => {
-        return new AuthService(usersService, jwtService);
-      },
-      inject: [UsersService, JwtService],
-    },
-  ],
+  providers: [AuthService],
 })
 export class AuthModule {}

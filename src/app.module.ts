@@ -12,7 +12,7 @@ import { AuthModule } from './modules/auth/auth.module';
   imports: [
     ProjectsModule,
     SharedModule,
-    ConfigModule.forRoot(),
+    ConfigModule.forRoot({ isGlobal: true }),
     TasksModule,
     UsersModule,
     AuthModule,
