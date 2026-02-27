@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { SearchManyRequestDto } from 'src/common/dtos/requests/search-many-request.dto';
 import { SearchResult } from 'src/common/repositories/search-result';
-import { CreateTaskRequestDto } from 'src/modules/tasks/dtos/requests/create-task-request.dto';
+import { ProjectIdRequestDto } from 'src/modules/tasks/dtos/requests/project-id-request.dto';
 import { TaskRequestDto } from 'src/modules/tasks/dtos/requests/task-request.dto';
 import { TaskResponse } from 'src/modules/tasks/dtos/responses/task-response.dto';
 import { ITaskRepository } from 'src/domain/tasks/repositories/task-repository';
 import { CreateTaskUseCase } from 'src/modules/tasks/usecases/create.usecase';
-import { FindAllTasksByProjectUseCase } from 'src/modules/tasks/usecases/find-all-by-project.usecase';
 import { FindTaskByIdUseCase } from 'src/modules/tasks/usecases/find-by-id.usecase';
 import { UpdateTaskUseCase } from 'src/modules/tasks/usecases/update.usecase';
+import { SearchTasksUseCase } from 'src/modules/tasks/usecases/search.usecase';
 
 @Injectable()
 export class TasksService {
@@ -23,16 +23,24 @@ export class TasksService {
     projectId: string,
     params: SearchManyRequestDto,
   ): Promise<SearchResult<TaskResponse.Dto>> {
-    const usecase = new FindAllTasksByProjectUseCase.UseCase(this.repository);
-    return await usecase.execute({ projectId, params });
+    const findMany = SearchTasksUseCase.Factory.create(this.repository);
+    return await findMany.execute({
+      projectId,
+      searchProps: params,
+    });
   }
 
   async create(
     author: string,
-    request: CreateTaskRequestDto,
+    projectId: string,
+    request: TaskRequestDto,
   ): Promise<TaskResponse.Dto> {
     const usecase = new CreateTaskUseCase.UseCase(this.repository);
-    return await usecase.execute({ ...request, createdById: author });
+    return await usecase.execute({
+      ...request,
+      createdById: author,
+      projectId,
+    });
   }
 
   async update(id: string, request: TaskRequestDto): Promise<TaskResponse.Dto> {

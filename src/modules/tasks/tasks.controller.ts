@@ -13,7 +13,7 @@ import {
 import { ApiResponse } from '@nestjs/swagger';
 import { SearchManyRequestDto } from 'src/common/dtos/requests/search-many-request.dto';
 import { SearchResult } from 'src/common/repositories/search-result';
-import { CreateTaskRequestDto } from 'src/modules/tasks/dtos/requests/create-task-request.dto';
+import { ProjectIdRequestDto } from 'src/modules/tasks/dtos/requests/project-id-request.dto';
 import { TaskRequestDto } from 'src/modules/tasks/dtos/requests/task-request.dto';
 import { TaskResponse } from 'src/modules/tasks/dtos/responses/task-response.dto';
 import { TasksService } from 'src/modules/tasks/tasks.service';
@@ -45,8 +45,12 @@ export class TasksController {
   @ApiResponse({
     type: TaskResponse.Dto,
   })
-  create(@Body() data: CreateTaskRequestDto) {
-    return this.service.create('cb69b14f-55fb-4a26-a4bb-2ed08b1c24df', data);
+  create(@Param() params: ProjectIdRequestDto, @Body() data: TaskRequestDto) {
+    return this.service.create(
+      '0c945d3d-6753-42f5-a76f-dfbd176df3a7',
+      params.projectId,
+      data,
+    );
   }
 
   @Put(':id')

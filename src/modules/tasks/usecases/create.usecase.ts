@@ -1,13 +1,22 @@
 import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import { IUseCase } from 'src/common/usecases/usecase.interface';
-import { CreateTaskRequestDto } from 'src/modules/tasks/dtos/requests/create-task-request.dto';
 import { TaskResponse } from 'src/modules/tasks/dtos/responses/task-response.dto';
 import { TaskEntity } from 'src/domain/tasks/entities/task-entity';
 import { ITaskRepository } from 'src/domain/tasks/repositories/task-repository';
+import { TaskStatus } from 'src/domain/tasks/enums/status';
+import { TaskPriority } from 'src/domain/tasks/enums/priority';
 
 export namespace CreateTaskUseCase {
-  export type Input = CreateTaskRequestDto & {
+  export type Input = {
+    title: string;
+    description?: string;
+    slug: string;
+    status?: TaskStatus;
+    priority?: TaskPriority;
+    dueDate?: Date;
+    projectId: string;
     createdById: string;
+    assigneeId: string;
   };
 
   export type Output = TaskResponse.Dto;
