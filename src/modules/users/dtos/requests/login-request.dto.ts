@@ -7,11 +7,14 @@ import {
   MinLength,
 } from 'class-validator';
 import { UserEntityProps } from 'src/domain/users/entities/user-entity';
-import { CredentialsRequest } from 'src/modules/users/dtos/requests/login-request.dto';
-import { UserRequestDto } from 'src/modules/users/dtos/requests/user-request.dto';
 
-export namespace CreateUserRequest {
-  export class Dto extends UserRequestDto {
+export namespace CredentialsRequest {
+  type Props = {
+    email: string;
+    password: string;
+  };
+
+  export class Dto implements Props {
     @IsNotEmpty({ message: 'O email não pode estar vazio' })
     @IsEmail({}, { message: 'O email deve estar formatado como email' })
     @ApiProperty({ description: 'Email do usuário' })
@@ -24,17 +27,14 @@ export namespace CreateUserRequest {
     @ApiProperty({ description: 'Senha do usuário' })
     password: string;
 
-    constructor(props: Omit<UserEntityProps, 'createdAt' | 'updatedAt'>) {
-      super({ name: props.name, avatar: props.avatar });
+    constructor(props: Props) {
       ((this.email = props.email), (this.password = props.password));
     }
   }
 
   export class Mapper {
-    static mapToRequest(
-      props: Omit<UserEntityProps, 'createdAt' | 'updatedAt'>,
-    ): Dto {
-      return new CreateUserRequest.Dto(props);
+    static mapToRequest(props: Props): Dto {
+      return new Dto(props);
     }
   }
 }

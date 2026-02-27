@@ -33,6 +33,7 @@ export class UserRequestDto {
       'password' | 'email' | 'role' | 'createdAt' | 'updatedAt'
     >,
   ) {
-    ((this.name = props.name), (this.avatar = props.avatar));
+    this.name = props.name;
+    this.avatar = props.avatar;
   }
 }

@@ -31,6 +31,16 @@ export class UserPrismaRepository implements IUserRepository {
     }
   }
 
+  async findByEmail(email: string): Promise<UserEntity> {
+    const model = await this.prismaService.user.findUnique({
+      where: { email },
+    });
+    if (!model) {
+      throw new NotFoundException('Usuário não encontrado');
+    }
+    return UserPrismaModelMapper.toEntity(model);
+  }
+
   async findMany(
     params: SearchParams,
     queries: AppQuery[],

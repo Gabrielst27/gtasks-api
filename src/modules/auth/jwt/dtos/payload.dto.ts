@@ -1,14 +1,12 @@
-import { UserResponse } from 'src/modules/users/dtos/responses/user-response.dto';
-
 export namespace Payload {
   type Props = {
     sub: string;
   };
 
   export class Mapper {
-    static mapToResponse(user: UserResponse.Dto): Props {
+    static mapToResponse(id: string): Props {
       return {
-        sub: user.id,
+        sub: id,
       };
     }
   }

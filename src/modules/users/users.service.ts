@@ -8,8 +8,10 @@ import { UserRequestDto } from 'src/modules/users/dtos/requests/user-request.dto
 import { UserResponse } from 'src/modules/users/dtos/responses/user-response.dto';
 import { CreateUserUseCase } from 'src/modules/users/usecases/create.usecase';
 import { FindAllUsers } from 'src/modules/users/usecases/find-all.usecase';
+import { LoginUseCase } from 'src/modules/users/usecases/login.usecase';
 import { FindUserByIdUseCase } from 'src/modules/users/usecases/find-by-id.usecase';
 import { UpdateUserUseCase } from 'src/modules/users/usecases/update.usecase';
+import { CredentialsRequest } from 'src/modules/users/dtos/requests/login-request.dto';
 
 @Injectable()
 export class UsersService {
@@ -21,6 +23,14 @@ export class UsersService {
   async findById(id: string): Promise<UserResponse.Dto> {
     const usecase = new FindUserByIdUseCase.UseCase(this.repository);
     return await usecase.execute({ id });
+  }
+
+  async login(credentials: CredentialsRequest.Dto): Promise<UserResponse.Dto> {
+    const usecase = new LoginUseCase.UseCase(
+      this.repository,
+      this.cryptography,
+    );
+    return await usecase.execute(credentials);
   }
 
   async findAll(

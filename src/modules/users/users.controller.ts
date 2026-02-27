@@ -41,20 +41,20 @@ export class UsersController {
     return this.service.findAll(params);
   }
 
-  @Post()
-  @HttpCode(HttpStatus.CREATED)
-  @ApiResponse({
-    type: UserResponse.Dto,
-  })
-  create(@Body() data: CreateUserRequest.Dto) {
-    return this.service.create(data);
-  }
+  // @Post()
+  // @HttpCode(HttpStatus.CREATED)
+  // @ApiResponse({
+  //   type: UserResponse.Dto,
+  // })
+  // create(@Body() data: CreateUserRequest.Dto) {
+  //   return this.service.create(data);
+  // }
 
-  @Put(':id')
-  @ApiResponse({
-    type: UserResponse.Dto,
-  })
-  update(@Param('id') id: string, @Body() data: UserRequestDto) {
-    return this.service.update(id, data);
-  }
+  // @Put(':id')
+  // @ApiResponse({
+  //   type: UserResponse.Dto,
+  // })
+  // update(@Param('id') id: string, @Body() data: UserRequestDto) {
+  //   return this.service.update(id, data);
+  // }
 }
