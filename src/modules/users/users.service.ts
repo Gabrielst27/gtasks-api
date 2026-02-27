@@ -7,11 +7,14 @@ import { CreateUserRequest } from 'src/modules/users/dtos/requests/create-user-r
 import { UserRequestDto } from 'src/modules/users/dtos/requests/user-request.dto';
 import { UserResponse } from 'src/modules/users/dtos/responses/user-response.dto';
 import { CreateUserUseCase } from 'src/modules/users/usecases/create.usecase';
-import { FindAllUsers } from 'src/modules/users/usecases/find-all.usecase';
 import { LoginUseCase } from 'src/modules/users/usecases/login.usecase';
 import { FindUserByIdUseCase } from 'src/modules/users/usecases/find-by-id.usecase';
 import { UpdateUserUseCase } from 'src/modules/users/usecases/update.usecase';
 import { CredentialsRequest } from 'src/modules/users/dtos/requests/login-request.dto';
+import { SearchProps } from 'src/common/repositories/search-params';
+import { SearchUsersUseCase } from 'src/modules/users/usecases/search.usecase';
+import { AppQueryProps } from 'src/common/utils/app-queries/app-query';
+import { makeQueryProps } from 'src/common/utils/app-queries/make-query-props';
 
 @Injectable()
 export class UsersService {
@@ -36,8 +39,14 @@ export class UsersService {
   async findAll(
     params: SearchManyRequestDto,
   ): Promise<SearchResult<UserResponse.Dto>> {
-    const usecase = new FindAllUsers.UseCase(this.repository);
-    return await usecase.execute(params);
+    const searchProps: SearchProps = {
+      page: params.page,
+      perPage: params.perPage,
+      sort: params.sort,
+      sortDir: params.sortDir,
+    };
+    const search = SearchUsersUseCase.Factory.create(this.repository);
+    return await search.execute({ params: searchProps });
   }
 
   async create(data: CreateUserRequest.Dto): Promise<UserResponse.Dto> {

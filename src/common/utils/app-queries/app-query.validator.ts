@@ -2,9 +2,8 @@ import {
   IsAlpha,
   IsEnum,
   IsNotEmpty,
+  IsOptional,
   IsString,
-  validateSync,
-  ValidationError,
 } from 'class-validator';
 import { EDbOperators } from 'src/common/enum/db-operators.enum';
 import { AppQueryProps } from 'src/common/utils/app-queries/app-query';
@@ -15,9 +14,9 @@ class AppQueryRules {
   @IsAlpha()
   field: string;
 
-  @IsNotEmpty()
+  @IsOptional()
   @IsString()
-  value: string;
+  value: string | null;
 
   @IsNotEmpty()
   @IsEnum(EDbOperators)

@@ -3,13 +3,13 @@ import { AppQueryValidatorFactory } from 'src/common/utils/app-queries/app-query
 
 export type AppQueryProps = {
   field: string;
-  value: string;
+  value: string | null;
   operator: EDbOperators;
 };
 
 export class AppQuery {
   readonly field: string;
-  readonly value: string;
+  readonly value: string | null;
   readonly operator: EDbOperators;
   public readonly isValid: boolean = false;
 

@@ -7,12 +7,14 @@ export type UserEntityProps = {
   password: string;
   avatar?: string;
   role?: Role;
+  disabledAt?: Date;
 } & EntityProps;
 
 export class UserEntity extends Entity<UserEntityProps> {
   constructor(props: UserEntityProps, id?: string) {
     //TODO: Create user entity validation
-    props.avatar = props.avatar ?? '';
+    props.disabledAt = props.disabledAt ?? undefined;
+    props.avatar = props.avatar ?? undefined;
     props.role = props.role || Role.USER;
     super(props, id);
   }

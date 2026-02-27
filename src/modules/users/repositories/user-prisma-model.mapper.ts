@@ -10,6 +10,7 @@ export class UserPrismaModelMapper {
         ...model,
         role: UserPrismaModelMapper.roleToAppEnum(model.role),
         avatar: model.avatar ?? undefined,
+        disabledAt: model.disabledAt ?? undefined,
       },
       model.id,
     );
@@ -21,6 +22,7 @@ export class UserPrismaModelMapper {
     return {
       ...json,
       avatar: json.avatar || null,
+      disabledAt: json.disabledAt || null,
       role: UserPrismaModelMapper.roleToModelEnum(json.role),
     };
   }

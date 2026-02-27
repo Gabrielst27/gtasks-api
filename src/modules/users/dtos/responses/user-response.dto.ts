@@ -14,6 +14,7 @@ export namespace UserResponse {
     avatar: string;
     createdAt: string;
     updatedAt: string;
+    disabledAt: string;
   };
 
   export class Dto implements Props {
@@ -41,13 +42,18 @@ export namespace UserResponse {
     @ApiProperty({ description: 'Data da última atualização do usuário' })
     updatedAt: string;
 
+    @IsNotEmpty()
+    @ApiProperty({ description: 'Data da última atualização do usuário' })
+    disabledAt: string;
+
     constructor(props: Required<UserEntityProps & { id: string }>) {
       this.id = props.id;
       this.name = props.name;
       this.email = props.email;
-      this.avatar = props.avatar;
+      this.avatar = props.avatar ?? '';
       this.createdAt = props.createdAt.toISOString();
       this.updatedAt = props.createdAt.toISOString();
+      this.disabledAt = props.disabledAt ? props.disabledAt.toISOString() : '';
     }
   }
 

@@ -2,6 +2,7 @@ import { SearchProps } from 'src/common/repositories/search-params';
 import { SearchResult } from 'src/common/repositories/search-result';
 import { IUseCase } from 'src/common/usecases/usecase.interface';
 import { AppQueryProps } from 'src/common/utils/app-queries/app-query';
+import { makeQueryProps } from 'src/common/utils/app-queries/make-query-props';
 import { IUserRepository } from 'src/domain/users/repositories/user.repository';
 import { UserResponse } from 'src/modules/users/dtos/responses/user-response.dto';
 import { BaseSearchUserUseCase } from 'src/modules/users/usecases/base-search.usecase';
@@ -9,12 +10,12 @@ import { BaseSearchUserUseCase } from 'src/modules/users/usecases/base-search.us
 export namespace SearchUsersUseCase {
   export type Input = {
     params: SearchProps;
-    queries: AppQueryProps[];
+    queries?: AppQueryProps[];
   };
 
   export type Output = SearchResult<UserResponse.Dto>;
 
-  class UseCase
+  export class UseCase
     extends BaseSearchUserUseCase
     implements IUseCase<Input, Output>
   {
@@ -23,10 +24,12 @@ export namespace SearchUsersUseCase {
     }
 
     async execute(input: Input): Promise<Output> {
-      const { queries, params } = input;
-      if (queries.length) {
-        const searchFields = queries.map((query) => query.field);
+      const { params } = input;
+      const queries = [makeQueryProps('disabledAt', null)];
+      if (input.queries && input.queries.length) {
+        const searchFields = input.queries.map((query) => query.field);
         super.validateSearchFields(searchFields);
+        queries.push(...input.queries);
       }
       if (params.sort) {
         super.validateSortField(params.sort);
