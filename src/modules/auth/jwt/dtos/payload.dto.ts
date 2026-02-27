@@ -1,5 +1,5 @@
 export namespace Payload {
-  type Props = {
+  export type Props = {
     sub: string;
   };
 

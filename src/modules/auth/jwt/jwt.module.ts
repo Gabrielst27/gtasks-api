@@ -2,6 +2,7 @@ import { Module } from '@nestjs/common';
 import { AuthJwtService } from './jwt.service';
 import { JwtModule } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { JwtStrategy } from 'src/modules/auth/jwt/jwt.strategy';
 
 type StringValue = '1d' | '30d';
 
@@ -17,7 +18,7 @@ type StringValue = '1d' | '30d';
       }),
     }),
   ],
-  providers: [AuthJwtService],
+  providers: [AuthJwtService, JwtStrategy],
   exports: [AuthJwtService],
 })
 export class AuthJwtModule {}
