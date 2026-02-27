@@ -9,12 +9,9 @@ import { UserResponse } from 'src/modules/users/dtos/responses/user-response.dto
 import { CreateUserUseCase } from 'src/modules/users/usecases/create.usecase';
 import { LoginUseCase } from 'src/modules/users/usecases/login.usecase';
 import { FindUserByIdUseCase } from 'src/modules/users/usecases/find-by-id.usecase';
-import { UpdateUserUseCase } from 'src/modules/users/usecases/update.usecase';
 import { CredentialsRequest } from 'src/modules/users/dtos/requests/login-request.dto';
 import { SearchProps } from 'src/common/repositories/search-params';
 import { SearchUsersUseCase } from 'src/modules/users/usecases/search.usecase';
-import { AppQueryProps } from 'src/common/utils/app-queries/app-query';
-import { makeQueryProps } from 'src/common/utils/app-queries/make-query-props';
 
 @Injectable()
 export class UsersService {
@@ -55,10 +52,5 @@ export class UsersService {
       this.cryptography,
     );
     return await usecase.execute(data);
-  }
-
-  async update(id: string, data: UserRequestDto): Promise<UserResponse.Dto> {
-    const usecase = new UpdateUserUseCase.UseCase(this.repository);
-    return await usecase.execute({ ...data, id });
   }
 }

@@ -20,7 +20,7 @@ export abstract class Entity<Props extends EntityProps> {
     return this._props;
   }
 
-  updateProps(props: Props) {
+  updateProps(props: Omit<Props, 'createdAt' | 'updatedAt'>) {
     this._props = {
       ...this._props,
       ...props,
