@@ -18,10 +18,10 @@ export namespace LoginUseCase {
     async execute(input: Input): Promise<UserResponse.Dto> {
       const { email, password } = input;
       if (!email || !password) {
-        throw new BadRequestException('Busca inválida');
+        throw new BadRequestException('Credencial(is) vazia(s)');
       }
       const user = await this.repository.findByEmail(email);
-      this.checkPassword(user, password);
+      await this.checkPassword(user, password);
       return UserResponse.Mapper.toResponse(user);
     }
 
