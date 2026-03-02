@@ -4,7 +4,6 @@ import { SearchResult } from 'src/common/repositories/search-result';
 import { IUserRepository } from 'src/domain/users/repositories/user.repository';
 import { ICryptography } from 'src/modules/shared/cryptography/cryptography.interface';
 import { CreateUserRequest } from 'src/modules/users/dtos/requests/create-user-request.dto';
-import { UserRequestDto } from 'src/modules/users/dtos/requests/user-request.dto';
 import { UserResponse } from 'src/modules/users/dtos/responses/user-response.dto';
 import { CreateUserUseCase } from 'src/modules/users/usecases/create.usecase';
 import { LoginUseCase } from 'src/modules/users/usecases/login.usecase';
@@ -12,6 +11,8 @@ import { FindUserByIdUseCase } from 'src/modules/users/usecases/find-by-id.useca
 import { CredentialsRequest } from 'src/modules/users/dtos/requests/login-request.dto';
 import { SearchProps } from 'src/common/repositories/search-params';
 import { SearchUsersUseCase } from 'src/modules/users/usecases/search.usecase';
+import { UpdateUserPasswordRequest } from 'src/modules/users/dtos/requests/update-password.dto';
+import { UpdateUserPasswordUseCase } from 'src/modules/users/usecases/update-password.usecase';
 
 @Injectable()
 export class UsersService {
@@ -52,5 +53,22 @@ export class UsersService {
       this.cryptography,
     );
     return await usecase.execute(data);
+  }
+
+  async updatePassword(
+    id: string,
+    token: string,
+    data: UpdateUserPasswordRequest.Dto,
+  ): Promise<UserResponse.Dto> {
+    const usecase = new UpdateUserPasswordUseCase.UseCase(
+      this.repository,
+      this.cryptography,
+    );
+    return await usecase.execute({
+      id,
+      token,
+      newPassword: data.newPassword,
+      oldPassword: data.oldPassword,
+    });
   }
 }
