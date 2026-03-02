@@ -9,6 +9,7 @@ import { UpdateProjectUseCase } from 'src/modules/projects/usecases/update.useca
 import { FindAllProjectsUseCase } from 'src/modules/projects/usecases/find-all.usecase';
 import { SearchResult } from 'src/common/repositories/search-result';
 import { FindProjectBySlugUseCase } from 'src/modules/projects/usecases/find-by-slug.usecase';
+import { AuthenticatedUserRequestDto } from 'src/modules/auth/dtos/requests/authenticated-user-request.dto';
 
 @Injectable()
 export class ProjectsService {
@@ -29,9 +30,9 @@ export class ProjectsService {
     return await usecase.execute({ slug });
   }
 
-  async create(author: string, data: ProjectRequestDto) {
+  async create(authUser: AuthenticatedUserRequestDto, data: ProjectRequestDto) {
     const usecase = new CreateProjectUseCase.UseCase(this.repository);
-    return await usecase.execute({ ...data, createdById: author });
+    return await usecase.execute({ ...data, createdById: authUser.id });
   }
 
   async update(id: string, data: ProjectRequestDto) {

@@ -7,6 +7,7 @@ import { ConfigModule } from '@nestjs/config';
 import { TasksModule } from './modules/tasks/tasks.module';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
+import { CollaboratorsModule } from './modules/collaborators/collaborators.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { AuthModule } from './modules/auth/auth.module';
     TasksModule,
     UsersModule,
     AuthModule,
+    CollaboratorsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

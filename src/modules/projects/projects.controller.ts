@@ -7,10 +7,14 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiResponse } from '@nestjs/swagger';
+import { AuthenticatedUser } from 'src/common/decorators/authenticated-user/authenticated-user.decorator';
 import { SearchManyRequestDto } from 'src/common/dtos/requests/search-many-request.dto';
 import { SearchResult } from 'src/common/repositories/search-result';
+import { AuthenticatedUserRequestDto } from 'src/modules/auth/dtos/requests/authenticated-user-request.dto';
+import { JwtAuthGuard } from 'src/modules/auth/jwt/guards/jwt-auth.guard';
 import { FindProjectBySlugRequestDto } from 'src/modules/projects/dtos/requests/find-by-slug-request.dto';
 import { ProjectRequestDto } from 'src/modules/projects/dtos/requests/project-request.dto';
 import { ProjectResponse } from 'src/modules/projects/dtos/responses/project-response.dto';
@@ -20,6 +24,7 @@ import { ProjectsService } from 'src/modules/projects/projects.service';
   version: '1',
   path: 'projects',
 })
+@UseGuards(JwtAuthGuard)
 export class ProjectsController {
   constructor(private projectsService: ProjectsService) {}
 
@@ -51,11 +56,11 @@ export class ProjectsController {
   @ApiResponse({
     type: ProjectResponse.Dto,
   })
-  create(@Body() data: ProjectRequestDto) {
-    return this.projectsService.create(
-      '0c945d3d-6753-42f5-a76f-dfbd176df3a7',
-      data,
-    );
+  create(
+    @AuthenticatedUser() authUser: AuthenticatedUserRequestDto,
+    @Body() data: ProjectRequestDto,
+  ) {
+    return this.projectsService.create(authUser, data);
   }
 
   @Put(':id')

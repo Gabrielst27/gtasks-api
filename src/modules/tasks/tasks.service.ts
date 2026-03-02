@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { SearchManyRequestDto } from 'src/common/dtos/requests/search-many-request.dto';
 import { SearchResult } from 'src/common/repositories/search-result';
-import { ProjectIdRequestDto } from 'src/modules/tasks/dtos/requests/project-id-request.dto';
 import { TaskRequestDto } from 'src/modules/tasks/dtos/requests/task-request.dto';
 import { TaskResponse } from 'src/modules/tasks/dtos/responses/task-response.dto';
 import { ITaskRepository } from 'src/domain/tasks/repositories/task-repository';
@@ -9,6 +8,7 @@ import { CreateTaskUseCase } from 'src/modules/tasks/usecases/create.usecase';
 import { FindTaskByIdUseCase } from 'src/modules/tasks/usecases/find-by-id.usecase';
 import { UpdateTaskUseCase } from 'src/modules/tasks/usecases/update.usecase';
 import { SearchTasksUseCase } from 'src/modules/tasks/usecases/search.usecase';
+import { AuthenticatedUserRequestDto } from 'src/modules/auth/dtos/requests/authenticated-user-request.dto';
 
 @Injectable()
 export class TasksService {
@@ -31,14 +31,14 @@ export class TasksService {
   }
 
   async create(
-    author: string,
+    authUser: AuthenticatedUserRequestDto,
     projectId: string,
     request: TaskRequestDto,
   ): Promise<TaskResponse.Dto> {
     const usecase = new CreateTaskUseCase.UseCase(this.repository);
     return await usecase.execute({
       ...request,
-      createdById: author,
+      createdById: authUser.id,
       projectId,
     });
   }

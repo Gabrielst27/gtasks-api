@@ -9,10 +9,14 @@ import {
   Post,
   Put,
   Query,
+  UseGuards,
 } from '@nestjs/common';
 import { ApiResponse } from '@nestjs/swagger';
+import { AuthenticatedUser } from 'src/common/decorators/authenticated-user/authenticated-user.decorator';
 import { SearchManyRequestDto } from 'src/common/dtos/requests/search-many-request.dto';
 import { SearchResult } from 'src/common/repositories/search-result';
+import { AuthenticatedUserRequestDto } from 'src/modules/auth/dtos/requests/authenticated-user-request.dto';
+import { JwtAuthGuard } from 'src/modules/auth/jwt/guards/jwt-auth.guard';
 import { ProjectIdRequestDto } from 'src/modules/tasks/dtos/requests/project-id-request.dto';
 import { TaskRequestDto } from 'src/modules/tasks/dtos/requests/task-request.dto';
 import { TaskResponse } from 'src/modules/tasks/dtos/responses/task-response.dto';
@@ -22,6 +26,7 @@ import { TasksService } from 'src/modules/tasks/tasks.service';
   version: '1',
   path: 'projects/:projectId/tasks',
 })
+@UseGuards(JwtAuthGuard)
 export class TasksController {
   constructor(private service: TasksService) {}
 
@@ -45,12 +50,12 @@ export class TasksController {
   @ApiResponse({
     type: TaskResponse.Dto,
   })
-  create(@Param() params: ProjectIdRequestDto, @Body() data: TaskRequestDto) {
-    return this.service.create(
-      '0c945d3d-6753-42f5-a76f-dfbd176df3a7',
-      params.projectId,
-      data,
-    );
+  create(
+    @AuthenticatedUser() authUser: AuthenticatedUserRequestDto,
+    @Param() params: ProjectIdRequestDto,
+    @Body() data: TaskRequestDto,
+  ) {
+    return this.service.create(authUser, params.projectId, data);
   }
 
   @Put(':id')

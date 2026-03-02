@@ -4,8 +4,10 @@ import { TasksService } from './tasks.service';
 import { ITaskRepository } from 'src/domain/tasks/repositories/task-repository';
 import { PrismaService } from 'src/modules/shared/prisma/prisma.service';
 import { TaskPrismaRepository } from 'src/modules/tasks/repositories/prisma/task-prisma.repository';
+import { SharedModule } from 'src/modules/shared/shared.module';
 
 @Module({
+  imports: [SharedModule],
   controllers: [TasksController],
   providers: [
     PrismaService,
