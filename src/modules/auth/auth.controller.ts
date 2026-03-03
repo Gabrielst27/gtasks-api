@@ -4,7 +4,6 @@ import { SignUpDto } from 'src/modules/auth/dtos/requests/sign-up.dto';
 import { SignInDto } from 'src/modules/auth/dtos/requests/sign-in.dto';
 import { ResetPasswordDto } from 'src/modules/auth/dtos/requests/reset-password.dto';
 import { JwtAuthGuard } from 'src/modules/auth/jwt/guards/jwt-auth.guard';
-import { AuthGuard } from '@nestjs/passport';
 import { AuthenticatedUser } from 'src/common/decorators/authenticated-user/authenticated-user.decorator';
 import { AuthenticatedUserDto } from 'src/modules/auth/dtos/authenticated-user.dto';
 
