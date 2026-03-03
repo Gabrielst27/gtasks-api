@@ -13,7 +13,7 @@ import { ApiResponse } from '@nestjs/swagger';
 import { AuthenticatedUser } from 'src/common/decorators/authenticated-user/authenticated-user.decorator';
 import { SearchManyRequestDto } from 'src/common/dtos/requests/search-many-request.dto';
 import { SearchResult } from 'src/common/repositories/search-result';
-import { AuthenticatedUserRequestDto } from 'src/modules/auth/dtos/requests/authenticated-user-request.dto';
+import { AuthenticatedUserDto } from 'src/modules/auth/dtos/authenticated-user.dto';
 import { JwtAuthGuard } from 'src/modules/auth/jwt/guards/jwt-auth.guard';
 import { FindProjectBySlugRequestDto } from 'src/modules/projects/dtos/requests/find-by-slug-request.dto';
 import { ProjectRequestDto } from 'src/modules/projects/dtos/requests/project-request.dto';
@@ -57,7 +57,7 @@ export class ProjectsController {
     type: ProjectResponse.Dto,
   })
   create(
-    @AuthenticatedUser() authUser: AuthenticatedUserRequestDto,
+    @AuthenticatedUser() authUser: AuthenticatedUserDto,
     @Body() data: ProjectRequestDto,
   ) {
     return this.projectsService.create(authUser, data);

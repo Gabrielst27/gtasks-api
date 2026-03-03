@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { AuthenticatedUserRequestDto } from 'src/modules/auth/dtos/requests/authenticated-user-request.dto';
+import { AuthenticatedUserDto } from 'src/modules/auth/dtos/authenticated-user.dto';
 import { ResetPasswordDto } from 'src/modules/auth/dtos/requests/reset-password.dto';
 import { SignInDto } from 'src/modules/auth/dtos/requests/sign-in.dto';
 import { SignUpDto } from 'src/modules/auth/dtos/requests/sign-up.dto';
@@ -35,7 +35,7 @@ export class AuthService {
   }
 
   async resetPassword(
-    authUser: AuthenticatedUserRequestDto,
+    authUser: AuthenticatedUserDto,
     data: ResetPasswordDto,
   ): Promise<AuthenticatedUserResponse> {
     const user = await this.usersService.updatePassword(

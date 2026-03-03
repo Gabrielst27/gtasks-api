@@ -6,7 +6,7 @@ import { ResetPasswordDto } from 'src/modules/auth/dtos/requests/reset-password.
 import { JwtAuthGuard } from 'src/modules/auth/jwt/guards/jwt-auth.guard';
 import { AuthGuard } from '@nestjs/passport';
 import { AuthenticatedUser } from 'src/common/decorators/authenticated-user/authenticated-user.decorator';
-import { AuthenticatedUserRequestDto } from 'src/modules/auth/dtos/requests/authenticated-user-request.dto';
+import { AuthenticatedUserDto } from 'src/modules/auth/dtos/authenticated-user.dto';
 
 @Controller({
   version: '1',
@@ -28,7 +28,7 @@ export class AuthController {
   @Put('reset-password')
   @UseGuards(JwtAuthGuard)
   resetPassword(
-    @AuthenticatedUser() authUser: AuthenticatedUserRequestDto,
+    @AuthenticatedUser() authUser: AuthenticatedUserDto,
     @Body() data: ResetPasswordDto,
   ) {
     return this.authService.resetPassword(authUser, data);
