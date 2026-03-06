@@ -12,11 +12,15 @@ export class CollaboratorPrismaRepository implements ICollaboratorRepository {
   findById(id: string): Promise<CollaboratorEntity> {
     throw new Error('Method not implemented.');
   }
-  findMany(
+
+  async findMany(
     params: SearchParams,
     queries: AppQuery[],
   ): Promise<SearchResult<CollaboratorEntity>> {
-    throw new Error('Method not implemented.');
+    const skip = params.page * params.perPage;
+    const take = params.perPage;
+
+    throw new Error('Method not implemented');
   }
 
   async create(item: CollaboratorEntity): Promise<CollaboratorEntity> {
