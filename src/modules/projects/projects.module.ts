@@ -5,9 +5,11 @@ import { SharedModule } from 'src/modules/shared/shared.module';
 import { PrismaService } from 'src/modules/shared/prisma/prisma.service';
 import { IProjectRepository } from 'src/domain/projects/repositories/projects.repository';
 import { ProjectsPrismaRepository } from 'src/modules/projects/repositories/prisma/projects-prisma.repository';
+import { AuthService } from 'src/modules/auth/auth.service';
+import { AuthModule } from 'src/modules/auth/auth.module';
 
 @Module({
-  imports: [SharedModule],
+  imports: [SharedModule, AuthModule],
   controllers: [ProjectsController],
   providers: [
     PrismaService,
@@ -20,10 +22,13 @@ import { ProjectsPrismaRepository } from 'src/modules/projects/repositories/pris
     },
     {
       provide: ProjectsService,
-      useFactory: (repository: IProjectRepository) => {
-        return new ProjectsService(repository);
+      useFactory: (
+        repository: IProjectRepository,
+        authService: AuthService,
+      ) => {
+        return new ProjectsService(repository, authService);
       },
-      inject: ['Repository'],
+      inject: ['Repository', AuthService],
     },
   ],
 })

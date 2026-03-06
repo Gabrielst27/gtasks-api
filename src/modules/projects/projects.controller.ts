@@ -70,8 +70,9 @@ export class ProjectsController {
   update(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() data: ProjectRequestDto,
+    @AuthenticatedUser() authUser: AuthenticatedUserDto,
   ) {
-    return this.projectsService.update(id, data);
+    return this.projectsService.update(id, data, authUser);
   }
 
   // @Delete()

@@ -10,16 +10,22 @@ import { FindAllProjectsUseCase } from 'src/modules/projects/usecases/find-all.u
 import { SearchResult } from 'src/common/repositories/search-result';
 import { FindProjectBySlugUseCase } from 'src/modules/projects/usecases/find-by-slug.usecase';
 import { AuthenticatedUserDto } from 'src/modules/auth/dtos/authenticated-user.dto';
+import { AuthService } from 'src/modules/auth/auth.service';
 
 @Injectable()
 export class ProjectsService {
-  constructor(private repository: IProjectRepository) {}
+  constructor(
+    private repository: IProjectRepository,
+    private readonly authService: AuthService,
+  ) {}
+
   async findAll(
     searchParams: SearchManyRequestDto,
   ): Promise<SearchResult<ProjectResponse.Dto>> {
     const usecase = new FindAllProjectsUseCase.UseCase(this.repository);
     return await usecase.execute(searchParams);
   }
+
   async findById(id: string) {
     const usecase = new FindProjectByIdUseCase.UseCase(this.repository);
     return await usecase.execute({ id });
@@ -31,11 +37,17 @@ export class ProjectsService {
   }
 
   async create(authUser: AuthenticatedUserDto, data: ProjectRequestDto) {
+    this.authService.verifyAdmin(authUser);
     const usecase = new CreateProjectUseCase.UseCase(this.repository);
     return await usecase.execute({ ...data, createdById: authUser.id });
   }
 
-  async update(id: string, data: ProjectRequestDto) {
+  async update(
+    id: string,
+    data: ProjectRequestDto,
+    authUser: AuthenticatedUserDto,
+  ) {
+    this.authService.verifyAdmin(authUser);
     const usecase = new UpdateProjectUseCase.UseCase(this.repository);
     return await usecase.execute({ ...data, id });
   }

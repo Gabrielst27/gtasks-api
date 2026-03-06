@@ -10,12 +10,21 @@ export namespace Payload {
   };
 
   export class Mapper {
-    static mapToResponse(user: UserResponse.Dto): Props {
+    static mapUserToResponse(user: UserResponse.Dto): Props {
       return {
         sub: user.id,
         name: user.name,
         email: user.email,
         role: user.role,
+      };
+    }
+
+    static mapPayloadToResponse(payload: any): Props {
+      return {
+        sub: payload.id,
+        name: payload.name,
+        email: payload.email,
+        role: payload.role,
       };
     }
   }

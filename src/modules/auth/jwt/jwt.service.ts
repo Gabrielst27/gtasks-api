@@ -9,8 +9,13 @@ export class AuthJwtService {
   constructor(private readonly jwtService: JwtService) {}
 
   sign(user: UserResponse.Dto): TokenResponse.Dto {
-    const payload = Payload.Mapper.mapToResponse(user);
+    const payload = Payload.Mapper.mapUserToResponse(user);
     const token = this.jwtService.sign(payload);
     return TokenResponse.Mapper.mapToResponse(token);
+  }
+
+  decode(token: string): Payload.Props {
+    const payload = this.jwtService.decode(token);
+    return Payload.Mapper.mapPayloadToResponse(payload);
   }
 }
