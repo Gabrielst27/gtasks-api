@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { SearchManyRequestDto } from 'src/common/dtos/requests/search-many-request.dto';
 import { SearchResult } from 'src/common/repositories/search-result';
-import { ICollaboratorRepository } from 'src/domain/collaborators/repositories/collaborator.repository';
+import { CollaboratorRepository } from 'src/domain/collaborators/repositories/collaborator.repository';
 import { AuthenticatedUserDto } from 'src/modules/auth/dtos/authenticated-user.dto';
 import { AddCollaboratorRequestDto } from 'src/modules/collaborators/dtos/requests/add-collaborator-request.dto';
 import { CollaboratorResponse } from 'src/modules/collaborators/dtos/responses/collaborator-response.dto';
@@ -12,7 +12,7 @@ import { ProjectsService } from 'src/modules/projects/projects.service';
 @Injectable()
 export class CollaboratorsService {
   constructor(
-    private readonly repository: ICollaboratorRepository,
+    private readonly repository: CollaboratorRepository,
     private readonly projectsService: ProjectsService,
   ) {}
 

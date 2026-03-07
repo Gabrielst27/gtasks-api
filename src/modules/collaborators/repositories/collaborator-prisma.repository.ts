@@ -6,13 +6,15 @@ import { SearchParams } from 'src/common/repositories/search-params';
 import { SearchResult } from 'src/common/repositories/search-result';
 import { AppQuery } from 'src/common/utils/app-queries/app-query';
 import { CollaboratorEntity } from 'src/domain/collaborators/entities/collaborator.entity';
-import { ICollaboratorRepository } from 'src/domain/collaborators/repositories/collaborator.repository';
+import { CollaboratorRepository } from 'src/domain/collaborators/repositories/collaborator.repository';
 import { CollaboratorPrismaModelMapper } from 'src/modules/collaborators/repositories/collaborator-prisma-model.mapper';
 import { PrismaService } from 'src/modules/shared/prisma/prisma.service';
 import { mapOperatorToModelEnum } from 'src/modules/shared/prisma/repositories/operator-model.mapper';
 
-export class CollaboratorPrismaRepository implements ICollaboratorRepository {
-  constructor(private readonly prismaService: PrismaService) {}
+export class CollaboratorPrismaRepository extends CollaboratorRepository {
+  constructor(private readonly prismaService: PrismaService) {
+    super();
+  }
 
   findById(id: string): Promise<CollaboratorEntity> {
     throw new Error('Method not implemented.');

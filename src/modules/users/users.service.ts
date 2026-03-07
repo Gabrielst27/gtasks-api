@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { SearchManyRequestDto } from 'src/common/dtos/requests/search-many-request.dto';
 import { SearchResult } from 'src/common/repositories/search-result';
-import { IUserRepository } from 'src/domain/users/repositories/user.repository';
 import { ICryptography } from 'src/modules/shared/cryptography/cryptography.interface';
 import { CreateUserRequest } from 'src/modules/users/dtos/requests/create-user-request.dto';
 import { UserResponse } from 'src/modules/users/dtos/responses/user-response.dto';
@@ -13,11 +12,12 @@ import { SearchProps } from 'src/common/repositories/search-params';
 import { SearchUsersUseCase } from 'src/modules/users/usecases/search.usecase';
 import { UpdateUserPasswordRequest } from 'src/modules/users/dtos/requests/update-password.dto';
 import { UpdateUserPasswordUseCase } from 'src/modules/users/usecases/update-password.usecase';
+import { UserRepository } from 'src/domain/users/repositories/user.repository';
 
 @Injectable()
 export class UsersService {
   constructor(
-    private repository: IUserRepository,
+    private repository: UserRepository,
     private cryptography: ICryptography,
   ) {}
 

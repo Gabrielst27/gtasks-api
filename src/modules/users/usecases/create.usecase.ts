@@ -1,7 +1,7 @@
 import { BadRequestException } from '@nestjs/common';
 import { IUseCase } from 'src/common/usecases/usecase.interface';
 import { UserEntity } from 'src/domain/users/entities/user-entity';
-import { IUserRepository } from 'src/domain/users/repositories/user.repository';
+import { UserRepository } from 'src/domain/users/repositories/user.repository';
 import { ICryptography } from 'src/modules/shared/cryptography/cryptography.interface';
 import { CreateUserRequest } from 'src/modules/users/dtos/requests/create-user-request.dto';
 import { UserResponse } from 'src/modules/users/dtos/responses/user-response.dto';
@@ -13,7 +13,7 @@ export namespace CreateUserUseCase {
 
   export class UseCase implements IUseCase<Input, Output> {
     constructor(
-      private repository: IUserRepository,
+      private repository: UserRepository,
       private cryptography: ICryptography,
     ) {}
 

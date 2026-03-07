@@ -2,7 +2,7 @@ import { BadRequestException, ForbiddenException } from '@nestjs/common';
 import { IUseCase } from 'src/common/usecases/usecase.interface';
 import { CollaboratorEntity } from 'src/domain/collaborators/entities/collaborator.entity';
 import { CollaboratorRole } from 'src/domain/collaborators/enums/collaborator-role.enum';
-import { ICollaboratorRepository } from 'src/domain/collaborators/repositories/collaborator.repository';
+import { CollaboratorRepository } from 'src/domain/collaborators/repositories/collaborator.repository';
 import { CollaboratorResponse } from 'src/modules/collaborators/dtos/responses/collaborator-response.dto';
 import { ProjectResponse } from 'src/modules/projects/dtos/responses/project-response.dto';
 
@@ -17,7 +17,7 @@ export namespace AddCollaborator {
   export type Output = CollaboratorResponse.Dto;
 
   export class UseCase implements IUseCase<Input, Output> {
-    constructor(private readonly repository: ICollaboratorRepository) {}
+    constructor(private readonly repository: CollaboratorRepository) {}
 
     async execute(input: Input): Promise<CollaboratorResponse.Dto> {
       const { authorId, userId, project, role } = input;

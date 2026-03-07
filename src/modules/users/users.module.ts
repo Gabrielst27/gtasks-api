@@ -3,10 +3,10 @@ import { UsersService } from './users.service';
 import { UsersController } from './users.controller';
 import { SharedModule } from 'src/modules/shared/shared.module';
 import { PrismaService } from 'src/modules/shared/prisma/prisma.service';
-import { IUserRepository } from 'src/domain/users/repositories/user.repository';
 import { UserPrismaRepository } from 'src/modules/users/repositories/user-prisma.repository';
 import { ICryptography } from 'src/modules/shared/cryptography/cryptography.interface';
 import { BcryptService } from 'src/modules/shared/cryptography/bcrypt/bcrypt.service';
+import { UserRepository } from 'src/domain/users/repositories/user.repository';
 
 @Module({
   imports: [SharedModule],
@@ -22,10 +22,7 @@ import { BcryptService } from 'src/modules/shared/cryptography/bcrypt/bcrypt.ser
     },
     {
       provide: UsersService,
-      useFactory: (
-        repository: IUserRepository,
-        cryptography: ICryptography,
-      ) => {
+      useFactory: (repository: UserRepository, cryptography: ICryptography) => {
         return new UsersService(repository, cryptography);
       },
       inject: ['Repository', BcryptService],

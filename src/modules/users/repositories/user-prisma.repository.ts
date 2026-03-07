@@ -5,15 +5,14 @@ import { SearchParams } from 'src/common/repositories/search-params';
 import { SearchResult } from 'src/common/repositories/search-result';
 import { AppQuery } from 'src/common/utils/app-queries/app-query';
 import { UserEntity } from 'src/domain/users/entities/user-entity';
-import { IUserRepository } from 'src/domain/users/repositories/user.repository';
+import { UserRepository } from 'src/domain/users/repositories/user.repository';
 import { PrismaService } from 'src/modules/shared/prisma/prisma.service';
 import { UserPrismaModelMapper } from 'src/modules/users/repositories/user-prisma-model.mapper';
 
-export class UserPrismaRepository implements IUserRepository {
-  protected searchableFields: string[] = ['createdAt', 'updatedAt'];
-  protected sortableFields: string[] = ['createdAt', 'updatedAt'];
-
-  constructor(private prismaService: PrismaService) {}
+export class UserPrismaRepository extends UserRepository {
+  constructor(private prismaService: PrismaService) {
+    super();
+  }
 
   async findById(id: string): Promise<UserEntity> {
     const model = await this.prismaService.user.findUnique({ where: { id } });

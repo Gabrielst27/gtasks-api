@@ -1,11 +1,11 @@
 import { Module } from '@nestjs/common';
 import { CollaboratorsService } from './collaborators.service';
 import { CollaboratorsController } from './collaborators.controller';
-import { ICollaboratorRepository } from 'src/domain/collaborators/repositories/collaborator.repository';
 import { CollaboratorPrismaRepository } from 'src/modules/collaborators/repositories/collaborator-prisma.repository';
 import { PrismaService } from 'src/modules/shared/prisma/prisma.service';
 import { ProjectsModule } from 'src/modules/projects/projects.module';
 import { ProjectsService } from 'src/modules/projects/projects.service';
+import { CollaboratorRepository } from 'src/domain/collaborators/repositories/collaborator.repository';
 
 @Module({
   imports: [ProjectsModule],
@@ -21,7 +21,7 @@ import { ProjectsService } from 'src/modules/projects/projects.service';
     {
       provide: CollaboratorsService,
       useFactory: (
-        repository: ICollaboratorRepository,
+        repository: CollaboratorRepository,
         projectsService: ProjectsService,
       ) => {
         return new CollaboratorsService(repository, projectsService);

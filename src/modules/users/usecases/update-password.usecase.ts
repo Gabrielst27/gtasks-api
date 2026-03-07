@@ -1,6 +1,6 @@
 import { BadRequestException, UnauthorizedException } from '@nestjs/common';
 import { IUseCase } from 'src/common/usecases/usecase.interface';
-import { IUserRepository } from 'src/domain/users/repositories/user.repository';
+import { UserRepository } from 'src/domain/users/repositories/user.repository';
 import { ICryptography } from 'src/modules/shared/cryptography/cryptography.interface';
 import { UserResponse } from 'src/modules/users/dtos/responses/user-response.dto';
 
@@ -15,7 +15,7 @@ export namespace UpdateUserPasswordUseCase {
 
   export class UseCase implements IUseCase<Input, Output> {
     constructor(
-      private readonly repository: IUserRepository,
+      private readonly repository: UserRepository,
       private readonly cryptography: ICryptography,
     ) {}
 

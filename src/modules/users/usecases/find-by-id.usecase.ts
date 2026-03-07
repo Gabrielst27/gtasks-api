@@ -1,6 +1,6 @@
 import { BadRequestException } from '@nestjs/common';
 import { IUseCase } from 'src/common/usecases/usecase.interface';
-import { IUserRepository } from 'src/domain/users/repositories/user.repository';
+import { UserRepository } from 'src/domain/users/repositories/user.repository';
 import { UserResponse } from 'src/modules/users/dtos/responses/user-response.dto';
 
 export namespace FindUserByIdUseCase {
@@ -8,7 +8,7 @@ export namespace FindUserByIdUseCase {
   export type Output = UserResponse.Dto;
 
   export class UseCase implements IUseCase<Input, Output> {
-    constructor(private repository: IUserRepository) {}
+    constructor(private repository: UserRepository) {}
 
     async execute(input: Input): Promise<UserResponse.Dto> {
       if (!input.id) {
