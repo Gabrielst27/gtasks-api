@@ -57,7 +57,10 @@ export class UserPrismaRepository implements IUserRepository {
                 [q.field]:
                   q.operator === EDbOperators.EQUALS
                     ? q.value
-                    : [UserPrismaModelMapper.operatorToModelEnum(q.operator)],
+                    : {
+                        [UserPrismaModelMapper.operatorToModelEnum(q.operator)]:
+                          q.value,
+                      },
               })),
             };
             return query(args);
@@ -68,7 +71,10 @@ export class UserPrismaRepository implements IUserRepository {
                 [q.field]:
                   q.operator === EDbOperators.EQUALS
                     ? q.value
-                    : [UserPrismaModelMapper.operatorToModelEnum(q.operator)],
+                    : {
+                        [UserPrismaModelMapper.operatorToModelEnum(q.operator)]:
+                          q.value,
+                      },
               })),
             };
             args.orderBy = { [params.sort]: params.sortDir };

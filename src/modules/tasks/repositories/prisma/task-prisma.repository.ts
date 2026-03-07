@@ -35,7 +35,10 @@ export class TaskPrismaRepository implements ITaskRepository {
                 [q.field]:
                   q.operator === EDbOperators.EQUALS
                     ? q.value
-                    : [TaskPrismaModelMapper.operatorToModelEnum(q.operator)],
+                    : {
+                        [TaskPrismaModelMapper.operatorToModelEnum(q.operator)]:
+                          q.value,
+                      },
               })),
             };
             return query(args);
@@ -46,7 +49,10 @@ export class TaskPrismaRepository implements ITaskRepository {
                 [q.field]:
                   q.operator === EDbOperators.EQUALS
                     ? q.value
-                    : [TaskPrismaModelMapper.operatorToModelEnum(q.operator)],
+                    : {
+                        [TaskPrismaModelMapper.operatorToModelEnum(q.operator)]:
+                          q.value,
+                      },
               })),
             };
             args.orderBy = { [searchParams.sort]: searchParams.sortDir };
