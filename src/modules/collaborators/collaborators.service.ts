@@ -7,10 +7,14 @@ import { AddCollaboratorRequestDto } from 'src/modules/collaborators/dtos/reques
 import { CollaboratorResponse } from 'src/modules/collaborators/dtos/responses/collaborator-response.dto';
 import { AddCollaborator } from 'src/modules/collaborators/usecases/add.usecase';
 import { SearchCollaborators } from 'src/modules/collaborators/usecases/search.usecase';
+import { ProjectsService } from 'src/modules/projects/projects.service';
 
 @Injectable()
 export class CollaboratorsService {
-  constructor(private readonly repository: ICollaboratorRepository) {}
+  constructor(
+    private readonly repository: ICollaboratorRepository,
+    private readonly projectsService: ProjectsService,
+  ) {}
 
   async add(
     author: AuthenticatedUserDto,
@@ -18,7 +22,8 @@ export class CollaboratorsService {
     data: AddCollaboratorRequestDto,
   ): Promise<CollaboratorResponse.Dto> {
     const usecase = new AddCollaborator.UseCase(this.repository);
-    return await usecase.execute({ ...data, authUser: author, projectId });
+    const project = await this.projectsService.findById(projectId);
+    return await usecase.execute({ ...data, authorId: author.id, project });
   }
 
   async findAll(

@@ -1,3 +1,6 @@
+import { ConflictException } from '@nestjs/common';
+import { log } from 'console';
+import { PrismaClientKnownRequestError } from 'generated/prisma/internal/prismaNamespace';
 import { EDbOperators } from 'src/common/enum/db-operators.enum';
 import { SearchParams } from 'src/common/repositories/search-params';
 import { SearchResult } from 'src/common/repositories/search-result';
@@ -13,6 +16,17 @@ export class CollaboratorPrismaRepository implements ICollaboratorRepository {
 
   findById(id: string): Promise<CollaboratorEntity> {
     throw new Error('Method not implemented.');
+  }
+
+  async findByProjectAndUser(
+    projectId: string,
+    userId: string,
+  ): Promise<CollaboratorEntity | null> {
+    const model = await this.prismaService.projectCollaborator.findFirst({
+      where: { AND: [{ projectId }, { userId }] },
+    });
+    if (!model) return null;
+    return CollaboratorPrismaModelMapper.toEntity(model);
   }
 
   async findMany(
@@ -82,7 +96,14 @@ export class CollaboratorPrismaRepository implements ICollaboratorRepository {
 
   async create(item: CollaboratorEntity): Promise<CollaboratorEntity> {
     const model = CollaboratorPrismaModelMapper.toModel(item);
-    await this.prismaService.projectCollaborator.create({ data: model });
+    try {
+      await this.prismaService.projectCollaborator.create({ data: model });
+    } catch (e) {
+      if (e instanceof PrismaClientKnownRequestError && e.code === 'P2002') {
+        throw new ConflictException('Colaborador já adicionado ao projeto');
+      }
+      throw new Error('[ERR-001]: Erro desconhecido');
+    }
     return item;
   }
 

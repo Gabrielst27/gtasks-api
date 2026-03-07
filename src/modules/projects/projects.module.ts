@@ -31,5 +31,6 @@ import { AuthModule } from 'src/modules/auth/auth.module';
       inject: ['Repository', AuthService],
     },
   ],
+  exports: [ProjectsService],
 })
 export class ProjectsModule {}

@@ -1,5 +1,4 @@
 import {
-  CollaboratorRole,
   CollaboratorRole as ModelCollaboratorRole,
   ProjectCollaborator,
 } from 'generated/prisma/client';
@@ -38,6 +37,7 @@ export class CollaboratorPrismaModelMapper {
       viewer: ModelCollaboratorRole.VIEWER,
       editor: ModelCollaboratorRole.EDITOR,
       owner: ModelCollaboratorRole.OWNER,
+      admin: ModelCollaboratorRole.ADMIN,
     };
     return mapper[roleEnum];
   }
@@ -46,9 +46,10 @@ export class CollaboratorPrismaModelMapper {
     roleEnum: ModelCollaboratorRole,
   ): AppCollaboratorRole {
     const mapper = {
-      viewer: AppCollaboratorRole.VIEWER,
-      editor: AppCollaboratorRole.EDITOR,
-      owner: AppCollaboratorRole.OWNER,
+      VIEWER: AppCollaboratorRole.VIEWER,
+      EDITOR: AppCollaboratorRole.EDITOR,
+      OWNER: AppCollaboratorRole.OWNER,
+      ADMIN: AppCollaboratorRole.ADMIN,
     };
     return mapper[roleEnum];
   }

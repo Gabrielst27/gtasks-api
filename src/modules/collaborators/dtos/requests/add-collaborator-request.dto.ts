@@ -18,7 +18,8 @@ export class AddCollaboratorRequestDto {
   })
   @IsOptional()
   @IsEnum(CollaboratorRole, {
-    message: 'role deve conter um dos seguintes valores: editor, viewer, owner',
+    message:
+      'role deve conter um dos seguintes valores: editor, viewer, owner, admin',
   })
   role?: CollaboratorRole;
 }

@@ -1,4 +1,5 @@
 import { ConflictException, NotFoundException } from '@nestjs/common';
+import { PrismaClientKnownRequestError } from 'generated/prisma/internal/prismaNamespace';
 import { EDbOperators } from 'src/common/enum/db-operators.enum';
 import { SearchParams } from 'src/common/repositories/search-params';
 import { SearchResult } from 'src/common/repositories/search-result';
@@ -20,15 +21,6 @@ export class UserPrismaRepository implements IUserRepository {
       throw new NotFoundException('Usuário não encontrado');
     }
     return UserPrismaModelMapper.toEntity(model);
-  }
-
-  async emailExists(email: string): Promise<void> {
-    const model = await this.prismaService.user.findUnique({
-      where: { email },
-    });
-    if (model) {
-      throw new ConflictException('Email já registrado');
-    }
   }
 
   async findByEmail(email: string): Promise<UserEntity> {
@@ -102,7 +94,14 @@ export class UserPrismaRepository implements IUserRepository {
 
   async create(item: UserEntity): Promise<UserEntity> {
     const model = UserPrismaModelMapper.toModel(item);
-    await this.prismaService.user.create({ data: model });
+    try {
+      await this.prismaService.user.create({ data: model });
+    } catch (e) {
+      if (e instanceof PrismaClientKnownRequestError && e.code === 'P2002') {
+        throw new ConflictException('Email já registrado');
+      }
+      throw new Error('[ERR-002]: Erro desconhecido');
+    }
     return item;
   }
 
