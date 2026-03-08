@@ -1,6 +1,7 @@
 import { Repository } from 'src/common/repositories/repository';
 import { IRepository } from 'src/common/repositories/repository.interface';
 import { SearchParams } from 'src/common/repositories/search-params';
+import { SearchResult } from 'src/common/repositories/search-result';
 import { AppQuery } from 'src/common/utils/app-queries/app-query';
 import { TaskEntity } from 'src/domain/tasks/entities/task-entity';
 
@@ -26,9 +27,12 @@ export abstract class TaskRepository
     return [...super.sortableFields, 'title'];
   }
 
-  abstract findById(id: string);
-  abstract findMany(params: SearchParams, queries: AppQuery[]);
-  abstract create(item: TaskEntity);
-  abstract update(id: string, item: TaskEntity);
-  abstract delete(id: string);
+  abstract findById(id: string): Promise<TaskEntity>;
+  abstract findMany(
+    params: SearchParams,
+    queries: AppQuery[],
+  ): Promise<SearchResult<TaskEntity>>;
+  abstract create(item: TaskEntity): Promise<TaskEntity>;
+  abstract update(id: string, item: TaskEntity): Promise<TaskEntity>;
+  abstract delete(id: string): Promise<TaskEntity>;
 }
