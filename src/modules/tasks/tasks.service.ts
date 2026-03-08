@@ -3,7 +3,7 @@ import { SearchManyRequestDto } from 'src/common/dtos/requests/search-many-reque
 import { SearchResult } from 'src/common/repositories/search-result';
 import { TaskRequestDto } from 'src/modules/tasks/dtos/requests/task-request.dto';
 import { TaskResponse } from 'src/modules/tasks/dtos/responses/task-response.dto';
-import { ITaskRepository } from 'src/domain/tasks/repositories/task-repository';
+import { TaskRepository } from 'src/domain/tasks/repositories/task-repository';
 import { CreateTaskUseCase } from 'src/modules/tasks/usecases/create.usecase';
 import { FindTaskByIdUseCase } from 'src/modules/tasks/usecases/find-by-id.usecase';
 import { UpdateTaskUseCase } from 'src/modules/tasks/usecases/update.usecase';
@@ -12,7 +12,7 @@ import { AuthenticatedUserDto } from 'src/modules/auth/dtos/authenticated-user.d
 
 @Injectable()
 export class TasksService {
-  constructor(private repository: ITaskRepository) {}
+  constructor(private repository: TaskRepository) {}
 
   async findById(id: string): Promise<TaskResponse.Dto> {
     const usecase = new FindTaskByIdUseCase.UseCase(this.repository);

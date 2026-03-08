@@ -4,9 +4,10 @@ import { SearchResult } from 'src/common/repositories/search-result';
 import { IUseCase } from 'src/common/usecases/usecase.interface';
 import { AppQueryProps } from 'src/common/utils/app-queries/app-query';
 import { TaskResponse } from 'src/modules/tasks/dtos/responses/task-response.dto';
-import { ITaskRepository } from 'src/domain/tasks/repositories/task-repository';
-import { BaseSearchTaskUseCase } from 'src/modules/tasks/usecases/base-search.usecase';
 import { makeQueryProps } from 'src/common/utils/app-queries/make-query-props';
+import { SearchUseCase } from 'src/common/usecases/search.usecase';
+import { TaskEntity } from 'src/domain/tasks/entities/task-entity';
+import { TaskRepository } from 'src/domain/tasks/repositories/task-repository';
 
 export namespace SearchTasksUseCase {
   export type Input = {
@@ -17,10 +18,10 @@ export namespace SearchTasksUseCase {
   export type Output = SearchResult<TaskResponse.Dto>;
 
   class UseCase
-    extends BaseSearchTaskUseCase
+    extends SearchUseCase<TaskEntity, TaskResponse.Dto>
     implements IUseCase<Input, Output>
   {
-    constructor(private repository: ITaskRepository) {
+    constructor(private repository: TaskRepository) {
       super();
     }
 
@@ -32,21 +33,33 @@ export namespace SearchTasksUseCase {
       const queries = [makeQueryProps('projectId', projectId)];
       if (queriesProps && queriesProps.length) {
         const fields = queriesProps.map((query) => query.field);
-        super.validateSearchFields(fields);
+        this.repository.validateSearchFields(fields);
         queries.push(...queriesProps);
       }
       if (searchProps.sort) {
-        super.validateSortField(searchProps.sort);
+        this.repository.validateSortField(searchProps.sort);
       }
       const searchParams = super.makeSearchParams(searchProps);
       const appQueries = super.makeAppQueries(queries);
       const result = await this.repository.findMany(searchParams, appQueries);
-      return super.convertToResponse(result);
+      return this.convertToResponse(result);
+    }
+
+    protected convertToResponse(
+      entityResult: SearchResult<TaskEntity>,
+    ): SearchResult<TaskResponse.Dto> {
+      const responses = entityResult.items.map((item) =>
+        TaskResponse.Mapper.toResponse(item),
+      );
+      return {
+        ...entityResult,
+        items: responses,
+      };
     }
   }
 
   export class Factory {
-    static create(repository: ITaskRepository): UseCase {
+    static create(repository: TaskRepository): UseCase {
       return new UseCase(repository);
     }
   }

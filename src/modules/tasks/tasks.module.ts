@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TasksController } from './tasks.controller';
 import { TasksService } from './tasks.service';
-import { ITaskRepository } from 'src/domain/tasks/repositories/task-repository';
+import { TaskRepository } from 'src/domain/tasks/repositories/task-repository';
 import { PrismaService } from 'src/modules/shared/prisma/prisma.service';
 import { TaskPrismaRepository } from 'src/modules/tasks/repositories/prisma/task-prisma.repository';
 import { SharedModule } from 'src/modules/shared/shared.module';
@@ -20,7 +20,7 @@ import { SharedModule } from 'src/modules/shared/shared.module';
     },
     {
       provide: TasksService,
-      useFactory: (repository: ITaskRepository) => {
+      useFactory: (repository: TaskRepository) => {
         return new TasksService(repository);
       },
       inject: ['Repository'],
