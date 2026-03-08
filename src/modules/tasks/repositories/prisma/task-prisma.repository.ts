@@ -1,4 +1,8 @@
-import { BadRequestException, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
 import { EDbOperators } from 'src/common/enum/db-operators.enum';
 import { SearchParams } from 'src/common/repositories/search-params';
 import { SearchResult } from 'src/common/repositories/search-result';
@@ -7,6 +11,7 @@ import { PrismaService } from 'src/modules/shared/prisma/prisma.service';
 import { TaskEntity } from 'src/domain/tasks/entities/task-entity';
 import { TaskPrismaModelMapper } from 'src/modules/tasks/repositories/prisma/task-prisma-model.mapper';
 import { TaskRepository } from 'src/domain/tasks/repositories/task-repository';
+import { PrismaClientKnownRequestError } from 'generated/prisma/internal/prismaNamespace';
 
 export class TaskPrismaRepository extends TaskRepository {
   constructor(private prismaService: PrismaService) {
@@ -82,9 +87,16 @@ export class TaskPrismaRepository extends TaskRepository {
 
   async create(item: TaskEntity): Promise<TaskEntity> {
     const model = TaskPrismaModelMapper.toModel(item);
-    await this.prismaService.task.create({
-      data: model,
-    });
+    try {
+      await this.prismaService.task.create({
+        data: model,
+      });
+    } catch (e) {
+      if (e instanceof PrismaClientKnownRequestError && e.code === 'P2002') {
+        throw new ConflictException('Tareja já registrada');
+      }
+      throw new Error('[ERR-004]: Erro desconhecido');
+    }
     return item;
   }
 
