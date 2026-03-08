@@ -35,19 +35,23 @@ export class AuthService {
     return token;
   }
 
-  async forgotPassword(email: string): Promise<string> {
+  async forgotPassword(email: string): Promise<{ message: string }> {
     const user = await this.usersService.findByEmail(email);
     const token = this.jwtService.sign(user, TokenPurposes.PASSWORD_RESET);
     await this.mailService.sendPasswordRequest(user.email, token.token);
-    return 'Requisição de senha enviada ao email informado';
+    return {
+      message: 'Requisição de redefinição de senha enviada ao email informado',
+    };
   }
 
-  async nonAuthResetPassword(data: ResetPasswordDto): Promise<string> {
+  async nonAuthResetPassword(
+    data: ResetPasswordDto,
+  ): Promise<{ message: string }> {
     const payload = this.jwtService.verifyResetPasswordToken(data.token);
     await this.usersService.updatePassword(payload.sub, {
       newPassword: data.newPassword,
     });
-    return 'Senha atualizada com sucesso';
+    return { message: 'Senha redefinida com sucesso' };
   }
 
   verifyToken(authUser: AuthenticatedUserDto): void {
