@@ -1,7 +1,6 @@
 import { Entity, EntityProps } from 'src/common/entities/entity';
 
 export type CommentEntityProps = {
-  id: string;
   content: string;
   authorId: string;
   taskId: string;

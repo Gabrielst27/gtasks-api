@@ -8,6 +8,7 @@ import { TasksModule } from './modules/tasks/tasks.module';
 import { UsersModule } from './modules/users/users.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CollaboratorsModule } from './modules/collaborators/collaborators.module';
+import { CommentsModule } from './modules/comments/comments.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { CollaboratorsModule } from './modules/collaborators/collaborators.modul
     UsersModule,
     AuthModule,
     CollaboratorsModule,
+    CommentsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
