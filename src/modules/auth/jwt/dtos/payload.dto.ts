@@ -60,18 +60,28 @@ export namespace Payload {
       }
       switch (purpose) {
         case TokenPurposes.AUTHENTICATION:
+          if (!token.name || !token.email || !token.role) {
+            throw new Error(
+              'Erro ao decodificar token: token sem propriedades de token de autenticação',
+            );
+          }
           return {
             sub: token.sub,
-            purpose,
+            purpose: token.purpose,
             name: token.name,
             email: token.email,
             role: token.role,
           } as PayloadByPurpose[T];
 
         case TokenPurposes.PASSWORD_RESET:
+          if (!token.email) {
+            throw new Error(
+              'Erro ao decodificar token: token sem propriedades de token de redefinição de senha',
+            );
+          }
           return {
             sub: token.id,
-            purpose,
+            purpose: token.purpose,
             email: token.email,
           } as PayloadByPurpose[T];
 

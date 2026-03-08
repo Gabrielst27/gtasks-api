@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Token } from 'src/modules/auth/dtos/token.dto';
 import { TokenPurposes } from 'src/modules/auth/jwt-purposes.enum';
@@ -15,19 +15,35 @@ export class AuthJwtService {
     return Token.Mapper.mapToToken(token);
   }
 
-  decodeAuthToken(token: string): Payload.AuthProps {
-    const payload = this.jwtService.decode(token);
-    return Payload.Mapper.decode<TokenPurposes.AUTHENTICATION>(
-      payload,
-      TokenPurposes.AUTHENTICATION,
-    );
+  verifyAuthToken(token: string): Payload.AuthProps {
+    try {
+      const payload = this.jwtService.verify(token);
+      const mapperPayload = Payload.Mapper.decode<TokenPurposes.AUTHENTICATION>(
+        payload,
+        TokenPurposes.AUTHENTICATION,
+      );
+      if (mapperPayload.purpose !== TokenPurposes.AUTHENTICATION) {
+        throw UnauthorizedException;
+      }
+      return mapperPayload;
+    } catch {
+      throw new UnauthorizedException('Token inválido');
+    }
   }
 
-  decodeResetPasswordToken(token: string): Payload.ResetPasswordProps {
-    const payload = this.jwtService.decode(token);
-    return Payload.Mapper.decode<TokenPurposes.PASSWORD_RESET>(
-      payload,
-      TokenPurposes.PASSWORD_RESET,
-    );
+  verifyResetPasswordToken(token: string): Payload.ResetPasswordProps {
+    try {
+      const payload = this.jwtService.verify(token);
+      const mappedPayload = Payload.Mapper.decode<TokenPurposes.PASSWORD_RESET>(
+        payload,
+        TokenPurposes.PASSWORD_RESET,
+      );
+      if (mappedPayload.purpose !== TokenPurposes.PASSWORD_RESET) {
+        throw UnauthorizedException;
+      }
+      return mappedPayload;
+    } catch {
+      throw new UnauthorizedException('Token inválido');
+    }
   }
 }

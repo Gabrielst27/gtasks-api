@@ -1,4 +1,12 @@
-import { Body, Controller, Post, Put, Query } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Put,
+  Query,
+} from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { SignUpDto } from 'src/modules/auth/dtos/requests/sign-up.dto';
 import { SignInDto } from 'src/modules/auth/dtos/requests/sign-in.dto';
@@ -13,23 +21,26 @@ export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
   @Post('sign-up')
+  @HttpCode(HttpStatus.CREATED)
   signup(@Body() data: SignUpDto) {
     return this.authService.signUp(data);
   }
 
   @Post('sign-in')
+  @HttpCode(HttpStatus.OK)
   signin(@Body() data: SignInDto) {
     return this.authService.signIn(data);
   }
 
   @Post('forgot-password')
+  @HttpCode(HttpStatus.OK)
   forgotPassword(@Body() data: ForgotPasswordDto) {
     return this.authService.forgotPassword(data.email);
   }
 
-  @Put('reset-password')
-  resetPassword(@Query() data: ResetPasswordDto) {
-    console.log('chegou aqui');
-    return this.authService.resetPassword(data);
+  @Put('non-authenticated-reset-password')
+  @HttpCode(HttpStatus.OK)
+  nonAuthResetPassword(@Body() data: ResetPasswordDto) {
+    return this.authService.nonAuthResetPassword(data);
   }
 }

@@ -7,9 +7,7 @@ import { UserResponse } from 'src/modules/users/dtos/responses/user-response.dto
 export namespace UpdateUserPasswordUseCase {
   export type Input = {
     id: string;
-    token: string;
     newPassword: string;
-    oldPassword: string;
   };
   export type Output = UserResponse.Dto;
 
@@ -20,19 +18,11 @@ export namespace UpdateUserPasswordUseCase {
     ) {}
 
     async execute(input: Input): Promise<UserResponse.Dto> {
-      const { id, newPassword, oldPassword } = input;
-      if (!id || !newPassword || !oldPassword) {
+      const { id, newPassword } = input;
+      if (!id || !newPassword) {
         throw new BadRequestException('Dados inválidos');
       }
       const user = await this.repository.findById(id);
-      const json = await user.toJson();
-      const isSamePassword = await this.cryptography.verifyPassword(
-        oldPassword,
-        json.password,
-      );
-      if (!isSamePassword) {
-        throw new UnauthorizedException('Senha incorreta');
-      }
       const hashPassword = await this.cryptography.generateHash(newPassword);
       user.updatePassword(hashPassword);
       await this.repository.update(id, user);

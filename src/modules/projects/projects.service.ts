@@ -37,7 +37,7 @@ export class ProjectsService {
   }
 
   async create(authUser: AuthenticatedUserDto, data: ProjectRequestDto) {
-    this.authService.verifyAdmin(authUser);
+    this.authService.verifyAdminToken(authUser);
     const usecase = new CreateProjectUseCase.UseCase(this.repository);
     return await usecase.execute({ ...data, createdById: authUser.id });
   }
@@ -47,7 +47,7 @@ export class ProjectsService {
     data: ProjectRequestDto,
     authUser: AuthenticatedUserDto,
   ) {
-    this.authService.verifyAdmin(authUser);
+    this.authService.verifyAdminToken(authUser);
     const usecase = new UpdateProjectUseCase.UseCase(this.repository);
     return await usecase.execute({ ...data, id });
   }

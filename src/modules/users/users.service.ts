@@ -63,7 +63,6 @@ export class UsersService {
 
   async updatePassword(
     id: string,
-    token: string,
     data: UpdateUserPasswordRequest.Dto,
   ): Promise<UserResponse.Dto> {
     const usecase = new UpdateUserPasswordUseCase.UseCase(
@@ -72,9 +71,7 @@ export class UsersService {
     );
     return await usecase.execute({
       id,
-      token,
       newPassword: data.newPassword,
-      oldPassword: data.oldPassword,
     });
   }
 }

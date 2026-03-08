@@ -42,12 +42,20 @@ export class AuthService {
     return 'Requisição de senha enviada ao email informado';
   }
 
-  async resetPassword(data: ResetPasswordDto) {
-    console.log('Acionou o reset password');
+  async nonAuthResetPassword(data: ResetPasswordDto): Promise<string> {
+    const payload = this.jwtService.verifyResetPasswordToken(data.token);
+    await this.usersService.updatePassword(payload.sub, {
+      newPassword: data.newPassword,
+    });
+    return 'Senha atualizada com sucesso';
   }
 
-  verifyAdmin(authUser: AuthenticatedUserDto): void {
-    const payload = this.jwtService.decodeAuthToken(authUser.token);
+  verifyToken(authUser: AuthenticatedUserDto): void {
+    this.jwtService.verifyAuthToken(authUser.token);
+  }
+
+  verifyAdminToken(authUser: AuthenticatedUserDto): void {
+    const payload = this.jwtService.verifyAuthToken(authUser.token);
     if (payload.role !== Role.ADMIN) {
       throw new ForbiddenException('Usuário sem permissão');
     }
