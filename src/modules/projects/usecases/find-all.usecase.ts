@@ -2,9 +2,9 @@ import { SearchProps } from 'src/common/repositories/search-params';
 import { SearchResult } from 'src/common/repositories/search-result';
 import { IUseCase } from 'src/common/usecases/usecase.interface';
 import { ProjectResponse } from 'src/modules/projects/dtos/responses/project-response.dto';
-import { IProjectRepository } from 'src/domain/projects/repositories/projects.repository';
 import { SearchProjectsUseCase } from 'src/modules/projects/usecases/search.usecase';
 import { SearchManyRequestDto } from 'src/common/dtos/requests/search-many-request.dto';
+import { ProjectRepository } from 'src/domain/projects/repositories/projects.repository';
 
 export namespace FindAllProjectsUseCase {
   export type Input = SearchManyRequestDto;
@@ -12,7 +12,7 @@ export namespace FindAllProjectsUseCase {
   export type Output = SearchResult<ProjectResponse.Dto>;
 
   export class UseCase implements IUseCase<Input, Output> {
-    constructor(private repository: IProjectRepository) {}
+    constructor(private repository: ProjectRepository) {}
 
     async execute(input: Input): Promise<Output> {
       const searchProps: SearchProps = {

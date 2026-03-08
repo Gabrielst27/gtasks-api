@@ -4,16 +4,15 @@ import { SearchParams } from 'src/common/repositories/search-params';
 import { SearchResult } from 'src/common/repositories/search-result';
 import { AppQuery } from 'src/common/utils/app-queries/app-query';
 import { ProjectEntity } from 'src/domain/projects/entities/project.entity';
+import { ProjectRepository } from 'src/domain/projects/repositories/projects.repository';
 import { ProjectPrismaModelMapper } from 'src/modules/projects/repositories/prisma/project-prisma-model.mapper';
-import { IProjectRepository } from 'src/domain/projects/repositories/projects.repository';
 import { PrismaService } from 'src/modules/shared/prisma/prisma.service';
 
 @Injectable()
-export class ProjectsPrismaRepository implements IProjectRepository {
-  protected searchableFields: string[] = ['createdAt', 'updatedAt', 'name'];
-  protected sortableFields: string[] = ['createdAt', 'updatedAt'];
-
-  constructor(private prismaService: PrismaService) {}
+export class ProjectsPrismaRepository extends ProjectRepository {
+  constructor(private prismaService: PrismaService) {
+    super();
+  }
 
   async findBySlug(slug: string): Promise<ProjectEntity> {
     const model = await this.prismaService.project.findUnique({

@@ -1,7 +1,7 @@
 import { BadRequestException } from '@nestjs/common';
 import { IUseCase } from 'src/common/usecases/usecase.interface';
+import { ProjectRepository } from 'src/domain/projects/repositories/projects.repository';
 import { ProjectResponse } from 'src/modules/projects/dtos/responses/project-response.dto';
-import { IProjectRepository } from 'src/domain/projects/repositories/projects.repository';
 
 export namespace FindProjectByIdUseCase {
   export type Input = {
@@ -11,7 +11,7 @@ export namespace FindProjectByIdUseCase {
   export type Output = ProjectResponse.Dto;
 
   export class UseCase implements IUseCase<Input, Output> {
-    constructor(private repository: IProjectRepository) {}
+    constructor(private repository: ProjectRepository) {}
 
     async execute(input: Input): Promise<ProjectResponse.Dto> {
       if (!input.id) {

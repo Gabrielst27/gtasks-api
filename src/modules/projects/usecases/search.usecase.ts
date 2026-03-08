@@ -1,10 +1,11 @@
 import { SearchProps } from 'src/common/repositories/search-params';
 import { SearchResult } from 'src/common/repositories/search-result';
+import { SearchUseCase } from 'src/common/usecases/search.usecase';
 import { IUseCase } from 'src/common/usecases/usecase.interface';
 import { AppQueryProps } from 'src/common/utils/app-queries/app-query';
+import { ProjectEntity } from 'src/domain/projects/entities/project.entity';
+import { ProjectRepository } from 'src/domain/projects/repositories/projects.repository';
 import { ProjectResponse } from 'src/modules/projects/dtos/responses/project-response.dto';
-import { IProjectRepository } from 'src/domain/projects/repositories/projects.repository';
-import { BaseSearchProjectUseCase } from 'src/modules/projects/usecases/base-search.usecase';
 
 export namespace SearchProjectsUseCase {
   export type Input = {
@@ -15,10 +16,10 @@ export namespace SearchProjectsUseCase {
   export type Output = SearchResult<ProjectResponse.Dto>;
 
   class UseCase
-    extends BaseSearchProjectUseCase
+    extends SearchUseCase<ProjectEntity, ProjectResponse.Dto>
     implements IUseCase<Input, Output>
   {
-    constructor(private repository: IProjectRepository) {
+    constructor(private repository: ProjectRepository) {
       super();
     }
 
@@ -26,20 +27,32 @@ export namespace SearchProjectsUseCase {
       const { queries, params } = input;
       if (queries.length) {
         const fields = queries.map((query) => query.field);
-        super.validateSearchFields(fields);
+        this.repository.validateSearchFields(fields);
       }
       if (params.sort) {
-        super.validateSortField(params.sort);
+        this.repository.validateSortField(params.sort);
       }
       const appQueries = super.makeAppQueries(queries);
       const searchParams = super.makeSearchParams(params);
       const result = await this.repository.findMany(searchParams, appQueries);
-      return super.convertToResponse(result);
+      return this.convertToResponse(result);
+    }
+
+    protected convertToResponse(
+      entityResult: SearchResult<ProjectEntity>,
+    ): SearchResult<ProjectResponse.Dto> {
+      const responses = entityResult.items.map((item) =>
+        ProjectResponse.Mapper.toResponse(item),
+      );
+      return {
+        ...entityResult,
+        items: responses,
+      };
     }
   }
 
   export class Factory {
-    static create(repository: IProjectRepository): UseCase {
+    static create(repository: ProjectRepository): UseCase {
       return new UseCase(repository);
     }
   }
