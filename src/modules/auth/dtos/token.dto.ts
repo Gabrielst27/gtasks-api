@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
 
-export namespace TokenResponse {
+export namespace Token {
   type Props = {
     token: string;
   };
@@ -17,7 +17,7 @@ export namespace TokenResponse {
   }
 
   export class Mapper {
-    static mapToResponse(token: string): Dto {
+    static mapToToken(token: string): Dto {
       const props = { token };
       return new Dto(props);
     }

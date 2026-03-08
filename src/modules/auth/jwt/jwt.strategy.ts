@@ -1,6 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
 import { ExtractJwt, Strategy } from 'passport-jwt';
+import { TokenPurposes } from 'src/modules/auth/jwt-purposes.enum';
 import { Payload } from 'src/modules/auth/jwt/dtos/payload.dto';
 
 @Injectable()
@@ -16,8 +17,11 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
 
   async validate(
     req: Request,
-    payload: Payload.Props,
+    payload: Payload.AuthProps | Payload.ResetPasswordProps,
   ): Promise<{ id: string; token: string }> {
+    if (payload.purpose === TokenPurposes.PASSWORD_RESET) {
+      throw new UnauthorizedException('Token inválido');
+    }
     const bearer: string = req.headers['authorization'];
     const id = payload.sub;
     if (!bearer || !id) {

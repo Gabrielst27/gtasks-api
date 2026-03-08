@@ -13,4 +13,9 @@ export class ResetPasswordDto {
   @IsString({ message: 'A senha atual deve ser string' })
   @MinLength(6, { message: 'A senha atual deve ter, no mínimo, 6 caracteres' })
   oldPassword: string;
+
+  @ApiProperty({ description: 'Token do usuário' })
+  @IsString({ message: 'O token deve ser string' })
+  @IsNotEmpty({ message: 'O token não pode estar vazio' })
+  token: string;
 }

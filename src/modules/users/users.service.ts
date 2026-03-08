@@ -13,6 +13,7 @@ import { SearchUsersUseCase } from 'src/modules/users/usecases/search.usecase';
 import { UpdateUserPasswordRequest } from 'src/modules/users/dtos/requests/update-password.dto';
 import { UpdateUserPasswordUseCase } from 'src/modules/users/usecases/update-password.usecase';
 import { UserRepository } from 'src/domain/users/repositories/user.repository';
+import { FindUserByEmailUseCase } from 'src/modules/users/usecases/find-by-email.usecase';
 
 @Injectable()
 export class UsersService {
@@ -24,6 +25,11 @@ export class UsersService {
   async findById(id: string): Promise<UserResponse.Dto> {
     const usecase = new FindUserByIdUseCase.UseCase(this.repository);
     return await usecase.execute({ id });
+  }
+
+  async findByEmail(email: string): Promise<UserResponse.Dto> {
+    const usecase = new FindUserByEmailUseCase.UseCase(this.repository);
+    return await usecase.execute({ email });
   }
 
   async login(credentials: CredentialsRequest.Dto): Promise<UserResponse.Dto> {

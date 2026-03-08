@@ -1,1 +1,3 @@
-export interface IMailService {}
+export interface IMailService {
+  sendPasswordRequest(email: string, token: string);
+}
