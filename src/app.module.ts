@@ -10,6 +10,7 @@ import { AuthModule } from './modules/auth/auth.module';
 import { CollaboratorsModule } from './modules/collaborators/collaborators.module';
 import { CommentsModule } from './modules/comments/comments.module';
 import { MailModule } from './modules/mail/mail.module';
+import { TeamsModule } from './modules/teams/teams.module';
 
 @Module({
   imports: [
@@ -22,6 +23,7 @@ import { MailModule } from './modules/mail/mail.module';
     CollaboratorsModule,
     CommentsModule,
     MailModule,
+    TeamsModule,
   ],
   controllers: [AppController],
   providers: [AppService],
