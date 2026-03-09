@@ -1,5 +1,5 @@
 import { Entity, EntityProps } from 'src/common/entities/entity';
-import { Plan } from 'src/domain/teams/enums/plan.enum';
+import { Plan } from 'src/domain/plans/enums/plan.enum';
 
 export type TeamEntityProps = {
   name: string;

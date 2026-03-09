@@ -9,7 +9,6 @@ export class MailService implements OnModuleInit {
   async onModuleInit() {
     try {
       await this.client.connect();
-      console.log('RabbitMQ connected');
     } catch (err) {
       console.error('RabbitMQ connection error:', err);
     }

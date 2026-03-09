@@ -11,6 +11,7 @@ import { CollaboratorsModule } from './modules/collaborators/collaborators.modul
 import { CommentsModule } from './modules/comments/comments.module';
 import { MailModule } from './modules/mail/mail.module';
 import { TeamsModule } from './modules/teams/teams.module';
+import { PlansModule } from './modules/plans/plans.module';
 
 @Module({
   imports: [
@@ -24,6 +25,7 @@ import { TeamsModule } from './modules/teams/teams.module';
     CommentsModule,
     MailModule,
     TeamsModule,
+    PlansModule,
   ],
   controllers: [AppController],
   providers: [AppService],

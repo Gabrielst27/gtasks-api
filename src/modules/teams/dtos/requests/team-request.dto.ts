@@ -9,7 +9,7 @@ export class TeamRequestDto {
   @MaxLength(24, { message: 'O nome da equipe pode conter até 24 caracteres' })
   name: string;
 
-  @IsNotEmpty({ message: 'O nome da equipe não pode estar vazio' })
-  @IsString({ message: 'O nome da equipe deve ser string' })
+  @IsNotEmpty({ message: 'O slug da equipe não pode estar vazio' })
+  @IsString({ message: 'O slug da equipe deve ser string' })
   slug: string;
 }

@@ -1,6 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
-import { Plan } from 'src/domain/teams/enums/plan.enum';
+import { TeamEntity } from 'src/domain/teams/entities/team.entity';
+import { Plan } from 'src/domain/plans/enums/plan.enum';
 
 export namespace TeamResponse {
   type Props = {
@@ -42,5 +43,20 @@ export namespace TeamResponse {
       format: 'date-time',
     })
     updatedAt: Date;
+
+    constructor(props: Props) {
+      this.name = props.name;
+      this.slug = props.slug;
+      this.plan = props.plan;
+      this.createdById = props.createdById;
+      this.createdAt = props.createdAt;
+      this.updatedAt = props.updatedAt;
+    }
+  }
+
+  export class Mapper {
+    static entityToResponse(entity: TeamEntity): Dto {
+      return entity.toJson();
+    }
   }
 }

@@ -20,6 +20,10 @@ prisma.config.ts
 !src/modules/projects/repositories/prisma
 !src/modules/tasks/repositories/prisma
 !src/modules/comments/repositories/prisma
+!src/modules/teams/repositories/prisma
+
+# Plans
+plan.settings.json
 
 # OS
 .DS_Store
