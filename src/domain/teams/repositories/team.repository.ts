@@ -1,0 +1,30 @@
+import { Repository } from 'src/common/repositories/repository';
+import { IRepository } from 'src/common/repositories/repository.interface';
+import { SearchParams } from 'src/common/repositories/search-params';
+import { SearchResult } from 'src/common/repositories/search-result';
+import { AppQuery } from 'src/common/utils/app-queries/app-query';
+import { TeamEntity } from 'src/domain/teams/entities/team.entity';
+
+interface ITeamRepository extends IRepository<TeamEntity> {}
+
+export abstract class TeamRepository
+  extends Repository
+  implements ITeamRepository
+{
+  protected get searchableFields(): string[] {
+    return [...this.searchableFields, 'name', 'slug'];
+  }
+
+  protected get sortableFields(): string[] {
+    return [...this.sortableFields, 'name'];
+  }
+
+  abstract findById(id: string): Promise<TeamEntity>;
+  abstract findMany(
+    params: SearchParams,
+    queries: AppQuery[],
+  ): Promise<SearchResult<TeamEntity>>;
+  abstract create(item: TeamEntity): Promise<TeamEntity>;
+  abstract update(id: string, item: TeamEntity): Promise<TeamEntity>;
+  abstract delete(id: string): Promise<TeamEntity>;
+}
