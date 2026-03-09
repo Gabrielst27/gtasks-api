@@ -8,8 +8,8 @@ import { Token } from 'src/modules/auth/dtos/token.dto';
 import { AuthJwtService } from 'src/modules/auth/jwt/jwt.service';
 import { CredentialsRequest } from 'src/modules/users/dtos/requests/login-request.dto';
 import { UsersService } from 'src/modules/users/users.service';
-import { MailService } from 'src/modules/mail/mail.service';
 import { TokenPurposes } from 'src/modules/auth/jwt-purposes.enum';
+import { MailService } from 'src/modules/mail/mail.service';
 
 @Injectable()
 export class AuthService {
