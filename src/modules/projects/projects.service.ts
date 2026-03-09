@@ -36,10 +36,14 @@ export class ProjectsService {
     return await usecase.execute({ slug });
   }
 
-  async create(authUser: AuthenticatedUserDto, data: ProjectRequestDto) {
+  async create(
+    authUser: AuthenticatedUserDto,
+    teamId: string,
+    data: ProjectRequestDto,
+  ) {
     this.authService.verifyAdminToken(authUser);
     const usecase = new CreateProjectUseCase.UseCase(this.repository);
-    return await usecase.execute({ ...data, createdById: authUser.id });
+    return await usecase.execute({ ...data, createdById: authUser.id, teamId });
   }
 
   async update(

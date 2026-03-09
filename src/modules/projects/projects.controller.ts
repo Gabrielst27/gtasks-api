@@ -22,7 +22,7 @@ import { ProjectsService } from 'src/modules/projects/projects.service';
 
 @Controller({
   version: '1',
-  path: 'projects',
+  path: 'teams/:teamId/projects',
 })
 @UseGuards(JwtAuthGuard)
 export class ProjectsController {
@@ -58,9 +58,10 @@ export class ProjectsController {
   })
   create(
     @AuthenticatedUser() authUser: AuthenticatedUserDto,
+    @Param('teamId') teamId: string,
     @Body() data: ProjectRequestDto,
   ) {
-    return this.projectsService.create(authUser, data);
+    return this.projectsService.create(authUser, teamId, data);
   }
 
   @Put(':id')

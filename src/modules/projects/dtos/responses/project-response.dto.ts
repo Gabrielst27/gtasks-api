@@ -11,6 +11,7 @@ export namespace ProjectResponse {
     name: string;
     description: string;
     createdById: string;
+    teamId: string;
     createdAt: string;
     updatedAt: string;
   };
@@ -37,6 +38,10 @@ export namespace ProjectResponse {
     createdById: string;
 
     @IsNotEmpty()
+    @ApiProperty({ description: 'ID da equipe à qual o projeto pertence' })
+    teamId: string;
+
+    @IsNotEmpty()
     @ApiProperty({ format: 'date-time' })
     createdAt: string;
 
@@ -50,6 +55,7 @@ export namespace ProjectResponse {
       this.description = props.description;
       this.slug = props.slug;
       this.createdById = props.createdById;
+      this.teamId = props.teamId;
       this.createdAt = props.createdAt.toISOString();
       this.updatedAt = props.updatedAt.toISOString();
     }

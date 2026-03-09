@@ -4,6 +4,7 @@ export type ProjectEntityProps = {
   name: string;
   description?: string;
   createdById: string;
+  teamId: string;
   slug: string;
 } & EntityProps;
 
