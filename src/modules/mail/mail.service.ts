@@ -1,18 +1,22 @@
-import { MailerService } from '@nestjs-modules/mailer';
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
+import { ClientProxy } from '@nestjs/microservices';
+import { SEND_PASSWORD_RESET } from 'src/common/constants';
 
 @Injectable()
-export class MailService {
-  constructor(private readonly mailerService: MailerService) {}
+export class MailService implements OnModuleInit {
+  constructor(private readonly client: ClientProxy) {}
 
-  async sendPasswordRequest(email: string, token: string) {
-    await this.mailerService.sendMail({
-      to: email,
-      subject: 'Redefinição de senha',
-      template: 'forgot-password.hbs',
-      context: {
-        url: `${process.env.API_PATH}/auth/reset-password?token=${token}`,
-      },
-    });
+  async onModuleInit() {
+    try {
+      await this.client.connect();
+      console.log('RabbitMQ connected');
+    } catch (err) {
+      console.error('RabbitMQ connection error:', err);
+    }
+  }
+
+  sendPasswordRequest(email: string, token: string) {
+    const url = `${process.env.API_PATH}/auth/non-authenticated-reset-password?token=${token}`;
+    this.client.emit(SEND_PASSWORD_RESET, { email, url });
   }
 }

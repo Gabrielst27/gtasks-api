@@ -4,6 +4,9 @@ import { MailerModule } from '@nestjs-modules/mailer';
 import * as path from 'node:path';
 import { HandlebarsAdapter } from '@nestjs-modules/mailer/dist/adapters/handlebars.adapter';
 import { ConfigService } from '@nestjs/config';
+import { ClientProxy, ClientsModule, Transport } from '@nestjs/microservices';
+import { EMAIL_QUEUE, EMAIL_SERVICE } from 'src/common/constants';
+import { MailConsumer } from 'src/modules/mail/mail.consumer';
 
 @Module({
   imports: [
@@ -31,8 +34,31 @@ import { ConfigService } from '@nestjs/config';
         },
       }),
     }),
+    ClientsModule.registerAsync([
+      {
+        name: EMAIL_SERVICE,
+        inject: [ConfigService],
+        useFactory: (configService: ConfigService) => ({
+          transport: Transport.RMQ,
+          options: {
+            urls: [configService.get<string>('RABBITMQ_URL')!],
+            queue: EMAIL_QUEUE,
+            queueOptions: { durable: true },
+          },
+        }),
+      },
+    ]),
   ],
-  providers: [MailService],
-  exports: [MailService],
+  providers: [
+    {
+      provide: MailService,
+      useFactory: (client: ClientProxy) => {
+        return new MailService(client);
+      },
+      inject: [EMAIL_SERVICE],
+    },
+  ],
+  controllers: [MailConsumer],
+  exports: [MailService, ClientsModule],
 })
 export class MailModule {}
