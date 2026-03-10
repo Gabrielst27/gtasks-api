@@ -5,4 +5,6 @@ export type PlanModel = {
   id: string;
   projectsLimit: number;
   membersLimit: number;
+  tasksByProjectLimit: number;
+  commentsByTaskLimit: number;
 };

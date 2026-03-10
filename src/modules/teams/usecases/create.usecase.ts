@@ -10,7 +10,6 @@ export namespace CreateTeam {
     name: string;
     slug: string;
     planId: string;
-    plan: Plan;
     createdById: string;
   };
 
@@ -20,8 +19,8 @@ export namespace CreateTeam {
     constructor(private readonly repository: TeamRepository) {}
 
     async execute(input: Input): Promise<TeamResponse.Dto> {
-      const { name, slug, planId, plan, createdById } = input;
-      if (!name || !slug || !planId || !plan || !createdById) {
+      const { name, slug, planId, createdById } = input;
+      if (!name || !slug || !planId || !createdById) {
         throw new BadRequestException('Dados inválidos');
       }
       const team = new TeamEntity(input);

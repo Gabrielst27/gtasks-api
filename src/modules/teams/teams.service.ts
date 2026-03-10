@@ -18,13 +18,12 @@ export class TeamsService {
     authUser: AuthenticatedUserDto,
     data: TeamRequestDto,
   ): Promise<TeamResponse.Dto> {
-    const plan = await this.plansService.findByTeam({});
+    const planId = this.plansService.getStarterPlanId();
     const create = new CreateTeam.UseCase(this.repository);
-    return create.execute({
+    return await create.execute({
       name: data.name,
       slug: data.slug,
-      planId: plan.id,
-      plan: plan.name,
+      planId,
       createdById: authUser.id,
     });
   }

@@ -6,6 +6,7 @@ import * as path from 'node:path';
 
 export class PlansJsonRepository extends PlanRepository {
   private jsonPlans: Record<string, Omit<PlanModel, 'id'>>;
+  private readonly STARTER_PLAN_ID = '65eb6bc8-c2b5-4338-b6c3-df72ae8f06c3';
 
   constructor() {
     super();
@@ -15,6 +16,10 @@ export class PlansJsonRepository extends PlanRepository {
     const file = fs.readFileSync(filePath, 'utf-8');
 
     this.jsonPlans = JSON.parse(file) as Record<string, Omit<PlanModel, 'id'>>;
+  }
+
+  getStarterPlanId(): string {
+    return this.STARTER_PLAN_ID;
   }
 
   async findById(id: string): Promise<PlanModel> {
