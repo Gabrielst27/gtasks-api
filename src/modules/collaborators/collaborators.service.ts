@@ -21,8 +21,8 @@ export class CollaboratorsService {
     projectId: string,
     data: AddCollaboratorRequestDto,
   ): Promise<CollaboratorResponse.Dto> {
-    const usecase = new AddCollaborator.UseCase(this.repository);
     const project = await this.projectsService.findById(projectId);
+    const usecase = new AddCollaborator.UseCase(this.repository);
     return await usecase.execute({ ...data, authorId: author.id, project });
   }
 
@@ -31,8 +31,6 @@ export class CollaboratorsService {
     projectId: string,
     params: SearchManyRequestDto,
   ): Promise<SearchResult<CollaboratorResponse.Dto>> {
-    if (!authUser.token)
-      throw new UnauthorizedException('Usuário não autenticado');
     const search = new SearchCollaborators.UseCase(this.repository);
     return await search.execute({ projectId, searchProps: params });
   }

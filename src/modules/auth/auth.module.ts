@@ -6,6 +6,7 @@ import { PassportModule } from '@nestjs/passport';
 import { AuthJwtModule } from './jwt/jwt.module';
 import { SharedModule } from 'src/modules/shared/shared.module';
 import { MailModule } from 'src/modules/mail/mail.module';
+import { TeamsModule } from 'src/modules/teams/teams.module';
 
 @Module({
   imports: [
@@ -14,6 +15,7 @@ import { MailModule } from 'src/modules/mail/mail.module';
     AuthJwtModule,
     SharedModule,
     MailModule,
+    TeamsModule,
   ],
   controllers: [AuthController],
   providers: [AuthService],

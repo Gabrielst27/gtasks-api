@@ -1,5 +1,8 @@
+import { MemberRole } from 'src/domain/teams/enums/member-role.enum';
 import { Role } from 'src/domain/users/enum/role.enum';
-import { TokenPurposes } from 'src/modules/auth/jwt-purposes.enum';
+import { TokenPurposes } from 'src/modules/auth/token-purposes.enum';
+import { TeamMemberResponse } from 'src/modules/teams/dtos/responses/team-member-response.dto';
+import { TeamResponse } from 'src/modules/teams/dtos/responses/team-response.dto';
 import { UserResponse } from 'src/modules/users/dtos/responses/user-response.dto';
 
 export namespace Payload {
@@ -12,6 +15,7 @@ export namespace Payload {
     name: string;
     email: string;
     role: Role;
+    teams: { id: string; role: MemberRole; plan: string }[];
   } & Props;
 
   export type ResetPasswordProps = { email: string } & Props;
@@ -22,27 +26,43 @@ export namespace Payload {
   };
 
   export class Mapper {
-    static create(payload: UserResponse.Dto, purpose: TokenPurposes) {
-      if (
-        payload instanceof UserResponse.Dto &&
-        purpose === TokenPurposes.AUTHENTICATION
-      ) {
+    static createUserPayload(
+      user: UserResponse.Dto,
+      purpose: TokenPurposes,
+      teams?: TeamResponse.Dto[],
+      membership?: TeamMemberResponse.Dto[],
+    ) {
+      if (purpose === TokenPurposes.AUTHENTICATION) {
+        const userTeams =
+          teams?.length && membership?.length
+            ? teams.map((team) => {
+                const membershipInfo = membership.find(
+                  (m) => m.teamId === team.id,
+                );
+                if (!membershipInfo) {
+                  return;
+                }
+                return {
+                  id: team.id,
+                  role: membershipInfo.role,
+                  plan: team.plan,
+                };
+              })
+            : [];
         return {
-          sub: payload.id,
+          sub: user.id,
           purpose,
-          name: payload.name,
-          email: payload.email,
-          role: payload.role,
+          name: user.name,
+          email: user.email,
+          role: user.role,
+          teams: userTeams,
         } as AuthProps;
       }
-      if (
-        payload instanceof UserResponse.Dto &&
-        purpose === TokenPurposes.PASSWORD_RESET
-      ) {
+      if (purpose === TokenPurposes.PASSWORD_RESET) {
         return {
-          sub: payload.id,
+          sub: user.id,
           purpose,
-          email: payload.email,
+          email: user.email,
         } as ResetPasswordProps;
       }
 
@@ -80,7 +100,7 @@ export namespace Payload {
             );
           }
           return {
-            sub: token.id,
+            sub: token.sub,
             purpose: token.purpose,
             email: token.email,
           } as PayloadByPurpose[T];

@@ -3,6 +3,7 @@ import { IRepository } from 'src/common/repositories/repository.interface';
 import { SearchParams } from 'src/common/repositories/search-params';
 import { SearchResult } from 'src/common/repositories/search-result';
 import { AppQuery } from 'src/common/utils/app-queries/app-query';
+import { TeamMemberEntity } from 'src/domain/teams/entities/member.entity';
 import { TeamEntity } from 'src/domain/teams/entities/team.entity';
 
 interface ITeamRepository extends IRepository<TeamEntity> {}
@@ -19,6 +20,11 @@ export abstract class TeamRepository
     return [...this.sortableFields, 'name'];
   }
 
+  abstract findByUser(
+    userId: string,
+  ): Promise<
+    SearchResult<{ team: TeamEntity } & { membership: TeamMemberEntity }>
+  >;
   abstract findById(id: string): Promise<TeamEntity>;
   abstract findMany(
     params: SearchParams,

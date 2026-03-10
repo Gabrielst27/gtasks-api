@@ -5,6 +5,7 @@ import { PlansService } from 'src/modules/plans/plans.service';
 import { TeamRequestDto } from 'src/modules/teams/dtos/requests/team-request.dto';
 import { TeamResponse } from 'src/modules/teams/dtos/responses/team-response.dto';
 import { CreateTeam } from 'src/modules/teams/usecases/create.usecase';
+import { FindTeamByUser } from 'src/modules/teams/usecases/find-by-user.usecase';
 
 @Injectable()
 export class TeamsService {
@@ -26,5 +27,10 @@ export class TeamsService {
       plan: plan.name,
       createdById: authUser.id,
     });
+  }
+
+  async findByUser(userId: string) {
+    const find = new FindTeamByUser.UseCase(this.repository);
+    return await find.execute({ userId });
   }
 }

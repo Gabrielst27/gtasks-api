@@ -8,14 +8,16 @@ import { Token } from 'src/modules/auth/dtos/token.dto';
 import { AuthJwtService } from 'src/modules/auth/jwt/jwt.service';
 import { CredentialsRequest } from 'src/modules/users/dtos/requests/login-request.dto';
 import { UsersService } from 'src/modules/users/users.service';
-import { TokenPurposes } from 'src/modules/auth/jwt-purposes.enum';
+import { TokenPurposes } from 'src/modules/auth/token-purposes.enum';
 import { MailService } from 'src/modules/mail/mail.service';
+import { TeamsService } from 'src/modules/teams/teams.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: AuthJwtService,
+    private readonly teamsService: TeamsService,
     private readonly mailService: MailService,
   ) {}
 
@@ -31,7 +33,19 @@ export class AuthService {
       password: data.password,
     });
     const user = await this.usersService.login(credentials);
-    const token = this.jwtService.sign(user, TokenPurposes.AUTHENTICATION);
+    const membership = await this.teamsService.findByUser(user.id);
+    const teams = membership.items.length
+      ? membership.items.map((item) => item.team)
+      : [];
+    const members = membership.items.length
+      ? membership.items.map((item) => item.membership)
+      : [];
+    const token = this.jwtService.sign(
+      user,
+      TokenPurposes.AUTHENTICATION,
+      teams,
+      members,
+    );
     return token;
   }
 
@@ -54,7 +68,7 @@ export class AuthService {
     return { message: 'Senha redefinida com sucesso' };
   }
 
-  verifyToken(authUser: AuthenticatedUserDto): void {
+  verifyUserToken(authUser: AuthenticatedUserDto): void {
     this.jwtService.verifyAuthToken(authUser.token);
   }
 

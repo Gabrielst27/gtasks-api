@@ -28,5 +28,6 @@ import { PrismaModule } from 'src/modules/shared/prisma/prisma.module';
     },
   ],
   controllers: [TeamsController],
+  exports: [TeamsService],
 })
 export class TeamsModule {}

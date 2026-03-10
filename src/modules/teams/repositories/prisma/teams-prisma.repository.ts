@@ -3,6 +3,7 @@ import { PrismaClientKnownRequestError } from '@prisma/client/runtime/client';
 import { SearchParams } from 'src/common/repositories/search-params';
 import { SearchResult } from 'src/common/repositories/search-result';
 import { AppQuery } from 'src/common/utils/app-queries/app-query';
+import { TeamMemberEntity } from 'src/domain/teams/entities/member.entity';
 import { TeamEntity } from 'src/domain/teams/entities/team.entity';
 import { TeamRepository } from 'src/domain/teams/repositories/team.repository';
 import { PrismaService } from 'src/modules/shared/prisma/prisma.service';
@@ -16,6 +17,36 @@ export class TeamsPrismaRepository extends TeamRepository {
   findById(id: string): Promise<TeamEntity> {
     throw new Error('Method not implemented.');
   }
+
+  async findByUser(
+    userId: string,
+  ): Promise<
+    SearchResult<{ team: TeamEntity } & { membership: TeamMemberEntity }>
+  > {
+    const skip = 0;
+    const take = 15;
+
+    const models = await this.prismaService.teamMember.findMany({
+      where: { userId },
+      include: {
+        team: true,
+      },
+      orderBy: { createdAt: 'desc' },
+    });
+    const entities = models.map((model) =>
+      TeamsPrismaModelMapper.toMembershipEntity(model),
+    );
+    return {
+      items: entities,
+      total: models.length,
+      page: skip,
+      perPage: take,
+      sort: 'createdAt',
+      sortDir: 'desc',
+      lastPage: 0,
+    };
+  }
+
   findMany(
     params: SearchParams,
     queries: AppQuery[],

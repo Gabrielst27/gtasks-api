@@ -20,6 +20,38 @@ export class TeamsPrismaModelMapper {
     };
   }
 
+  static toMembershipEntity(
+    model: {
+      team: Team;
+    } & TeamMember,
+  ): { team: TeamEntity } & { membership: TeamMemberEntity } {
+    const { team, ...memberProps } = model;
+    const memberEntity = new TeamMemberEntity(
+      {
+        userId: memberProps.userId,
+        teamId: memberProps.teamId,
+        role: TeamsPrismaModelMapper.memberRoleToEntityEnum(memberProps.role),
+        createdAt: memberProps.createdAt,
+        updatedAt: memberProps.updatedAt,
+      },
+      memberProps.id,
+    );
+    const teamEntity = new TeamEntity(
+      {
+        name: team.name,
+        slug: team.slug,
+        plan: TeamsPrismaModelMapper.planToEntityEnum(team.plan),
+        planId: team.planId,
+        createdById: team.createdById,
+        disabledAt: team.disabledAt ?? undefined,
+        createdAt: team.createdAt,
+        updatedAt: team.updatedAt,
+      },
+      team.id,
+    );
+    return { team: teamEntity, membership: memberEntity };
+  }
+
   static createOwner(model: Team): TeamMember {
     const owner = new TeamMemberEntity({
       userId: model.createdById,
@@ -37,6 +69,15 @@ export class TeamsPrismaModelMapper {
     };
   }
 
+  static memberRoleToEntityEnum(memberRole: MemberRole): AppMemberRole {
+    const mapper = {
+      OWNER: AppMemberRole.OWNER,
+      ADMIN: AppMemberRole.ADMIN,
+      MEMBER: AppMemberRole.MEMBER,
+    };
+    return mapper[memberRole];
+  }
+
   static memberRoleToModelEnum(memberRole: AppMemberRole): MemberRole {
     const mapper = {
       owner: MemberRole.OWNER,
@@ -44,6 +85,15 @@ export class TeamsPrismaModelMapper {
       member: MemberRole.MEMBER,
     };
     return mapper[memberRole];
+  }
+
+  static planToEntityEnum(planEnum: Plan): AppPlan {
+    const mapper = {
+      STARTER: AppPlan.STARTER,
+      PRO: AppPlan.PRO,
+      CORPORATE: AppPlan.CORPORATE,
+    };
+    return mapper[planEnum];
   }
 
   static planToModelEnum(planEnum: AppPlan): Plan {
