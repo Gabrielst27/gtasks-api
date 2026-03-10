@@ -41,7 +41,7 @@ export class ProjectsService {
     teamId: string,
     data: ProjectRequestDto,
   ) {
-    this.authService.verifyAdminToken(authUser);
+    this.authService.verifyTeamAdminToken(authUser, teamId);
     const usecase = new CreateProjectUseCase.UseCase(this.repository);
     return await usecase.execute({ ...data, createdById: authUser.id, teamId });
   }
@@ -50,8 +50,9 @@ export class ProjectsService {
     id: string,
     data: ProjectRequestDto,
     authUser: AuthenticatedUserDto,
+    teamId: string,
   ) {
-    this.authService.verifyAdminToken(authUser);
+    this.authService.verifyTeamAdminToken(authUser, teamId);
     const usecase = new UpdateProjectUseCase.UseCase(this.repository);
     return await usecase.execute({ ...data, id });
   }

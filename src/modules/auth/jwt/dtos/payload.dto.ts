@@ -1,5 +1,4 @@
 import { MemberRole } from 'src/domain/teams/enums/member-role.enum';
-import { Role } from 'src/domain/users/enum/role.enum';
 import { TokenPurposes } from 'src/modules/auth/token-purposes.enum';
 import { TeamMemberResponse } from 'src/modules/teams/dtos/responses/team-member-response.dto';
 import { TeamResponse } from 'src/modules/teams/dtos/responses/team-response.dto';
@@ -14,8 +13,7 @@ export namespace Payload {
   export type AuthProps = {
     name: string;
     email: string;
-    role: Role;
-    teams: { id: string; role: MemberRole; plan: string }[];
+    teams: { id: string; role: MemberRole; planId: string }[];
   } & Props;
 
   export type ResetPasswordProps = { email: string } & Props;
@@ -36,6 +34,7 @@ export namespace Payload {
         const userTeams =
           teams?.length && membership?.length
             ? teams.map((team) => {
+                const planId = team.planId;
                 const membershipInfo = membership.find(
                   (m) => m.teamId === team.id,
                 );
@@ -45,7 +44,7 @@ export namespace Payload {
                 return {
                   id: team.id,
                   role: membershipInfo.role,
-                  plan: team.plan,
+                  planId,
                 };
               })
             : [];
@@ -54,7 +53,6 @@ export namespace Payload {
           purpose,
           name: user.name,
           email: user.email,
-          role: user.role,
           teams: userTeams,
         } as AuthProps;
       }
@@ -90,7 +88,6 @@ export namespace Payload {
             purpose: token.purpose,
             name: token.name,
             email: token.email,
-            role: token.role,
           } as PayloadByPurpose[T];
 
         case TokenPurposes.PASSWORD_RESET:

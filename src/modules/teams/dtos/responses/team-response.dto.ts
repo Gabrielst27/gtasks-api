@@ -1,7 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
 import { TeamEntity } from 'src/domain/teams/entities/team.entity';
-import { Plan } from 'src/domain/plans/enums/plan.enum';
 import { TeamMemberEntity } from 'src/domain/teams/entities/member.entity';
 import { TeamMemberResponse } from 'src/modules/teams/dtos/responses/team-member-response.dto';
 
@@ -10,7 +9,6 @@ export namespace TeamResponse {
     id: string;
     name: string;
     slug: string;
-    plan: Plan;
     planId: string;
     createdById: string;
     createdAt: Date;
@@ -35,10 +33,6 @@ export namespace TeamResponse {
     slug: string;
 
     @IsNotEmpty()
-    @ApiProperty({ description: 'Plano de assinatura da equipe' })
-    plan: Plan;
-
-    @IsNotEmpty()
     @ApiProperty({ description: 'ID do criador da equipe' })
     createdById: string;
 
@@ -60,7 +54,6 @@ export namespace TeamResponse {
       this.id = props.id;
       this.name = props.name;
       this.slug = props.slug;
-      this.plan = props.plan;
       this.planId = props.planId;
       this.createdById = props.createdById;
       this.createdAt = props.createdAt;

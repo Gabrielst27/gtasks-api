@@ -4,7 +4,6 @@ import {
   UserEntity,
   UserEntityProps,
 } from 'src/domain/users/entities/user-entity';
-import { Role } from 'src/domain/users/enum/role.enum';
 
 export namespace UserResponse {
   type Props = {
@@ -12,7 +11,6 @@ export namespace UserResponse {
     name: string;
     email: string;
     avatar: string;
-    role: Role;
     createdAt: string;
     updatedAt: string;
     disabledAt: string;
@@ -35,10 +33,6 @@ export namespace UserResponse {
     @ApiProperty({ description: 'Url da imagem de avatar do usuário' })
     avatar: string;
 
-    @IsEnum(Role)
-    @ApiProperty({ description: 'Nível de permissão do usuário' })
-    role: Role;
-
     @IsNotEmpty()
     @ApiProperty({ description: 'Data de criação do usuário' })
     createdAt: string;
@@ -56,7 +50,6 @@ export namespace UserResponse {
       this.name = props.name;
       this.email = props.email;
       this.avatar = props.avatar ?? '';
-      this.role = props.role;
       this.createdAt = props.createdAt.toISOString();
       this.updatedAt = props.createdAt.toISOString();
       this.disabledAt = props.disabledAt ? props.disabledAt.toISOString() : '';

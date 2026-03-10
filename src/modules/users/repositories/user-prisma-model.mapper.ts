@@ -1,14 +1,12 @@
-import { Role, User } from 'generated/prisma/client';
+import { User } from 'generated/prisma/client';
 import { EDbOperators } from 'src/common/enum/db-operators.enum';
 import { UserEntity } from 'src/domain/users/entities/user-entity';
-import { Role as AppRole } from 'src/domain/users/enum/role.enum';
 
 export class UserPrismaModelMapper {
   static toEntity(model: User): UserEntity {
     const entity = new UserEntity(
       {
         ...model,
-        role: UserPrismaModelMapper.roleToAppEnum(model.role),
         avatar: model.avatar ?? undefined,
         disabledAt: model.disabledAt ?? undefined,
       },
@@ -23,24 +21,7 @@ export class UserPrismaModelMapper {
       ...json,
       avatar: json.avatar || null,
       disabledAt: json.disabledAt || null,
-      role: UserPrismaModelMapper.roleToModelEnum(json.role),
     };
-  }
-
-  static roleToAppEnum(role: Role): AppRole {
-    const mapper = {
-      USER: AppRole.USER,
-      ADMIN: AppRole.ADMIN,
-    };
-    return mapper[role];
-  }
-
-  static roleToModelEnum(role: AppRole): Role {
-    const mapper = {
-      user: Role.USER,
-      admin: Role.ADMIN,
-    };
-    return mapper[role];
   }
 
   static operatorToModelEnum(opEnum: EDbOperators) {

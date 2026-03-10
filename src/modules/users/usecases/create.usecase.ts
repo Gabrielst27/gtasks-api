@@ -3,11 +3,14 @@ import { IUseCase } from 'src/common/usecases/usecase.interface';
 import { UserEntity } from 'src/domain/users/entities/user-entity';
 import { UserRepository } from 'src/domain/users/repositories/user.repository';
 import { ICryptography } from 'src/modules/shared/cryptography/cryptography.interface';
-import { CreateUserRequest } from 'src/modules/users/dtos/requests/create-user-request.dto';
 import { UserResponse } from 'src/modules/users/dtos/responses/user-response.dto';
 
 export namespace CreateUserUseCase {
-  export type Input = CreateUserRequest.Dto;
+  export type Input = {
+    name: string;
+    email: string;
+    password: string;
+  };
 
   export type Output = UserResponse.Dto;
 

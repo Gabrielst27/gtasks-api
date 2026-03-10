@@ -1,4 +1,4 @@
-import { MemberRole, Plan, Team, TeamMember } from 'generated/prisma/client';
+import { MemberRole, Team, TeamMember } from 'generated/prisma/client';
 import { Plan as AppPlan } from 'src/domain/plans/enums/plan.enum';
 import { TeamMemberEntity } from 'src/domain/teams/entities/member.entity';
 import { TeamEntity } from 'src/domain/teams/entities/team.entity';
@@ -12,7 +12,6 @@ export class TeamsPrismaModelMapper {
       name: json.name,
       slug: json.slug,
       createdById: json.createdById,
-      plan: TeamsPrismaModelMapper.planToModelEnum(json.plan),
       planId: json.planId,
       createdAt: json.createdAt,
       updatedAt: json.updatedAt,
@@ -40,7 +39,6 @@ export class TeamsPrismaModelMapper {
       {
         name: team.name,
         slug: team.slug,
-        plan: TeamsPrismaModelMapper.planToEntityEnum(team.plan),
         planId: team.planId,
         createdById: team.createdById,
         disabledAt: team.disabledAt ?? undefined,
@@ -85,23 +83,5 @@ export class TeamsPrismaModelMapper {
       member: MemberRole.MEMBER,
     };
     return mapper[memberRole];
-  }
-
-  static planToEntityEnum(planEnum: Plan): AppPlan {
-    const mapper = {
-      STARTER: AppPlan.STARTER,
-      PRO: AppPlan.PRO,
-      CORPORATE: AppPlan.CORPORATE,
-    };
-    return mapper[planEnum];
-  }
-
-  static planToModelEnum(planEnum: AppPlan): Plan {
-    const mapper = {
-      starter: Plan.STARTER,
-      pro: Plan.PRO,
-      corporate: Plan.CORPORATE,
-    };
-    return mapper[planEnum];
   }
 }

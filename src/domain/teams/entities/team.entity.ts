@@ -4,7 +4,6 @@ import { Plan } from 'src/domain/plans/enums/plan.enum';
 export type TeamEntityProps = {
   name: string;
   slug: string;
-  plan: Plan;
   planId: string;
   createdById: string;
   disabledAt?: Date;
