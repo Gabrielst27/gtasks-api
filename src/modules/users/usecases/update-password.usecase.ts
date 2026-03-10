@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { IUseCase } from 'src/common/usecases/usecase.interface';
 import { UserRepository } from 'src/domain/users/repositories/user.repository';
-import { ICryptography } from 'src/modules/shared/cryptography/cryptography.interface';
+import { ICryptography } from 'src/common/utils/cryptography/cryptography.interface';
 import { UserResponse } from 'src/modules/users/dtos/responses/user-response.dto';
 
 export namespace UpdateUserPassword {

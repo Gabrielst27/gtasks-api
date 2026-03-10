@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import { IBcryptService } from 'src/modules/shared/cryptography/bcrypt/bcrypt.service.interface';
 import bcrypt from 'bcrypt';
+import { ICryptography } from 'src/common/utils/cryptography/cryptography.interface';
 
 @Injectable()
-export class BcryptService implements IBcryptService {
+export class BcryptService implements ICryptography {
   private salt = bcrypt.genSaltSync(10);
 
   async generateHash(password: string) {

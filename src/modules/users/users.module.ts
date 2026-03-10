@@ -4,7 +4,7 @@ import { UsersController } from './users.controller';
 import { SharedModule } from 'src/modules/shared/shared.module';
 import { PrismaService } from 'src/modules/shared/prisma/prisma.service';
 import { UserPrismaRepository } from 'src/modules/users/repositories/user-prisma.repository';
-import { ICryptography } from 'src/modules/shared/cryptography/cryptography.interface';
+import { ICryptography } from 'src/common/utils/cryptography/cryptography.interface';
 import { BcryptService } from 'src/modules/shared/cryptography/bcrypt/bcrypt.service';
 import { UserRepository } from 'src/domain/users/repositories/user.repository';
 import { FindUserById } from 'src/modules/users/usecases/find-by-id.usecase';
