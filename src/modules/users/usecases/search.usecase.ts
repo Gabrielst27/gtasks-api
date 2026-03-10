@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import { SearchProps } from 'src/common/repositories/search-params';
 import { SearchResult } from 'src/common/repositories/search-result';
 import { SearchUseCase } from 'src/common/usecases/search.usecase';
@@ -8,7 +9,7 @@ import { UserEntity } from 'src/domain/users/entities/user-entity';
 import { UserRepository } from 'src/domain/users/repositories/user.repository';
 import { UserResponse } from 'src/modules/users/dtos/responses/user-response.dto';
 
-export namespace SearchUsersUseCase {
+export namespace SearchUsers {
   export type Input = {
     params: SearchProps;
     queries?: AppQueryProps[];
@@ -16,6 +17,7 @@ export namespace SearchUsersUseCase {
 
   export type Output = SearchResult<UserResponse.Dto>;
 
+  @Injectable()
   export class UseCase
     extends SearchUseCase<UserEntity, UserResponse.Dto>
     implements IUseCase<Input, Output>
@@ -51,12 +53,6 @@ export namespace SearchUsersUseCase {
         ...entityResult,
         items: responses,
       };
-    }
-  }
-
-  export class Factory {
-    static create(repository: UserRepository): UseCase {
-      return new UseCase(repository);
     }
   }
 }

@@ -1,16 +1,21 @@
-import { BadRequestException, UnauthorizedException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  UnauthorizedException,
+} from '@nestjs/common';
 import { IUseCase } from 'src/common/usecases/usecase.interface';
 import { UserRepository } from 'src/domain/users/repositories/user.repository';
 import { ICryptography } from 'src/modules/shared/cryptography/cryptography.interface';
 import { UserResponse } from 'src/modules/users/dtos/responses/user-response.dto';
 
-export namespace UpdateUserPasswordUseCase {
+export namespace UpdateUserPassword {
   export type Input = {
     id: string;
     newPassword: string;
   };
   export type Output = UserResponse.Dto;
 
+  @Injectable()
   export class UseCase implements IUseCase<Input, Output> {
     constructor(
       private readonly repository: UserRepository,

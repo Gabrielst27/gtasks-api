@@ -1,11 +1,11 @@
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { IUseCase } from 'src/common/usecases/usecase.interface';
 import { UserEntity } from 'src/domain/users/entities/user-entity';
 import { UserRepository } from 'src/domain/users/repositories/user.repository';
 import { ICryptography } from 'src/modules/shared/cryptography/cryptography.interface';
 import { UserResponse } from 'src/modules/users/dtos/responses/user-response.dto';
 
-export namespace CreateUserUseCase {
+export namespace CreateUser {
   export type Input = {
     name: string;
     email: string;
@@ -14,6 +14,7 @@ export namespace CreateUserUseCase {
 
   export type Output = UserResponse.Dto;
 
+  @Injectable()
   export class UseCase implements IUseCase<Input, Output> {
     constructor(
       private repository: UserRepository,
