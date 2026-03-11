@@ -5,7 +5,7 @@ import { TeamEntity } from 'src/domain/teams/entities/team.entity';
 import { MemberRole as AppMemberRole } from 'src/domain/teams/enums/member-role.enum';
 
 export class TeamsPrismaModelMapper {
-  static toModel(entity: TeamEntity): Team {
+  static toTeamModel(entity: TeamEntity): Team {
     const json = entity.toJson();
     return {
       id: json.id,
@@ -16,6 +16,18 @@ export class TeamsPrismaModelMapper {
       createdAt: json.createdAt,
       updatedAt: json.updatedAt,
       disabledAt: json.disabledAt || null,
+    };
+  }
+
+  static toMemberModel(entity: TeamMemberEntity): TeamMember {
+    const json = entity.toJson();
+    return {
+      id: json.id,
+      createdAt: json.createdAt,
+      updatedAt: json.updatedAt,
+      userId: json.userId,
+      teamId: json.teamId,
+      role: TeamsPrismaModelMapper.memberRoleToModelEnum(json.role),
     };
   }
 

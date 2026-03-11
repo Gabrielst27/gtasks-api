@@ -5,7 +5,7 @@ import { TokenPurposes } from 'src/modules/auth/token-purposes.enum';
 import { Payload } from 'src/modules/auth/jwt/dtos/payload.dto';
 import { UserResponse } from 'src/modules/users/dtos/responses/user-response.dto';
 import { TeamResponse } from 'src/modules/teams/dtos/responses/team-response.dto';
-import { TeamMemberResponse } from 'src/modules/teams/dtos/responses/team-member-response.dto';
+import { MemberResponse } from 'src/modules/teams/dtos/responses/member-response.dto';
 
 @Injectable()
 export class AuthJwtService {
@@ -15,7 +15,7 @@ export class AuthJwtService {
     user: UserResponse.Dto,
     purpose: TokenPurposes,
     teams?: TeamResponse.Dto[],
-    members?: TeamMemberResponse.Dto[],
+    members?: MemberResponse.Dto[],
   ): Token.Dto {
     const payload = Payload.Mapper.createUserPayload(
       user,

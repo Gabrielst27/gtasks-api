@@ -1,4 +1,4 @@
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, Injectable } from '@nestjs/common';
 import { IUseCase } from 'src/common/usecases/usecase.interface';
 import { TeamEntity } from 'src/domain/teams/entities/team.entity';
 import { Plan } from 'src/domain/plans/enums/plan.enum';
@@ -15,6 +15,7 @@ export namespace CreateTeam {
 
   export type Output = TeamResponse.Dto;
 
+  @Injectable()
   export class UseCase implements IUseCase<Input, Output> {
     constructor(private readonly repository: TeamRepository) {}
 

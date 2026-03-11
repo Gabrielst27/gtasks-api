@@ -2,7 +2,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNotEmpty } from 'class-validator';
 import { TeamEntity } from 'src/domain/teams/entities/team.entity';
 import { TeamMemberEntity } from 'src/domain/teams/entities/member.entity';
-import { TeamMemberResponse } from 'src/modules/teams/dtos/responses/team-member-response.dto';
+import { MemberResponse } from 'src/modules/teams/dtos/responses/member-response.dto';
 
 export namespace TeamResponse {
   type Props = {
@@ -72,10 +72,10 @@ export namespace TeamResponse {
       } & {
         membership: TeamMemberEntity;
       },
-    ): { team: TeamResponse.Dto } & { membership: TeamMemberResponse.Dto } {
+    ): { team: TeamResponse.Dto } & { membership: MemberResponse.Dto } {
       const { team, ...memberProps } = result;
       const teamResponse = Mapper.entityToResponse(team);
-      const memberResponse = TeamMemberResponse.Mapper.toResponse(
+      const memberResponse = MemberResponse.Mapper.toResponse(
         memberProps.membership,
       );
       return { team: teamResponse, membership: memberResponse };

@@ -1,6 +1,6 @@
 import { MemberRole } from 'src/domain/teams/enums/member-role.enum';
 import { TokenPurposes } from 'src/modules/auth/token-purposes.enum';
-import { TeamMemberResponse } from 'src/modules/teams/dtos/responses/team-member-response.dto';
+import { MemberResponse } from 'src/modules/teams/dtos/responses/member-response.dto';
 import { TeamResponse } from 'src/modules/teams/dtos/responses/team-response.dto';
 import { UserResponse } from 'src/modules/users/dtos/responses/user-response.dto';
 
@@ -28,7 +28,7 @@ export namespace Payload {
       user: UserResponse.Dto,
       purpose: TokenPurposes,
       teams?: TeamResponse.Dto[],
-      membership?: TeamMemberResponse.Dto[],
+      membership?: MemberResponse.Dto[],
     ) {
       if (purpose === TokenPurposes.AUTHENTICATION) {
         const userTeams =
@@ -78,7 +78,7 @@ export namespace Payload {
       }
       switch (purpose) {
         case TokenPurposes.AUTHENTICATION:
-          if (!token.name || !token.email || !token.role) {
+          if (!token.name || !token.email || !token.teams) {
             throw new Error(
               'Erro ao decodificar token: token sem propriedades de token de autenticação',
             );
@@ -88,6 +88,7 @@ export namespace Payload {
             purpose: token.purpose,
             name: token.name,
             email: token.email,
+            teams: token.teams,
           } as PayloadByPurpose[T];
 
         case TokenPurposes.PASSWORD_RESET:

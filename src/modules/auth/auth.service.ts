@@ -1,4 +1,9 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  forwardRef,
+  Inject,
+  Injectable,
+} from '@nestjs/common';
 import { AuthenticatedUserDto } from 'src/modules/auth/dtos/authenticated-user.dto';
 import { ResetPasswordDto } from 'src/modules/auth/dtos/requests/reset-password.dto';
 import { SignInDto } from 'src/modules/auth/dtos/requests/sign-in.dto';
@@ -14,10 +19,11 @@ import { MemberRole } from 'src/domain/teams/enums/member-role.enum';
 
 @Injectable()
 export class AuthService {
+  @Inject(forwardRef(() => TeamsService))
+  private readonly teamsService: TeamsService;
   constructor(
     private readonly usersService: UsersService,
     private readonly jwtService: AuthJwtService,
-    private readonly teamsService: TeamsService,
     private readonly mailService: MailService,
   ) {}
 

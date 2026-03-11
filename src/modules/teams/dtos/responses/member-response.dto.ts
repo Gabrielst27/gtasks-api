@@ -3,7 +3,7 @@ import { IsNotEmpty } from 'class-validator';
 import { TeamMemberEntity } from 'src/domain/teams/entities/member.entity';
 import { MemberRole } from 'src/domain/teams/enums/member-role.enum';
 
-export namespace TeamMemberResponse {
+export namespace MemberResponse {
   type Props = {
     id: string;
     userId: string;

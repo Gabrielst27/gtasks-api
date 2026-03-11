@@ -53,8 +53,9 @@ export class TeamsPrismaRepository extends TeamRepository {
   ): Promise<SearchResult<TeamEntity>> {
     throw new Error('Method not implemented.');
   }
+
   async create(item: TeamEntity): Promise<TeamEntity> {
-    const model = TeamsPrismaModelMapper.toModel(item);
+    const model = TeamsPrismaModelMapper.toTeamModel(item);
     const owner = TeamsPrismaModelMapper.createOwner(model);
     try {
       await this.prismaService.$transaction([
@@ -69,6 +70,20 @@ export class TeamsPrismaRepository extends TeamRepository {
       throw new Error('[ERR-005]: Erro desconhecido');
     }
   }
+
+  async addMember(member: TeamMemberEntity): Promise<TeamMemberEntity> {
+    const model = TeamsPrismaModelMapper.toMemberModel(member);
+    try {
+      await this.prismaService.teamMember.create({ data: model });
+      return member;
+    } catch (e) {
+      if (e instanceof PrismaClientKnownRequestError && e.code === 'P2002') {
+        throw new ConflictException('Membro já adicionado à equipe');
+      }
+      throw new Error('[ERR-006]: Erro desconhecido');
+    }
+  }
+
   update(id: string, item: TeamEntity): Promise<TeamEntity> {
     throw new Error('Method not implemented.');
   }

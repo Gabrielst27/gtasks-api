@@ -1,26 +1,38 @@
-import { Injectable } from '@nestjs/common';
+import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { MemberRole } from 'src/domain/teams/enums/member-role.enum';
 import { TeamRepository } from 'src/domain/teams/repositories/team.repository';
+import { AuthService } from 'src/modules/auth/auth.service';
 import { AuthenticatedUserDto } from 'src/modules/auth/dtos/authenticated-user.dto';
 import { PlansService } from 'src/modules/plans/plans.service';
+import { AddMemberRequestDto } from 'src/modules/teams/dtos/requests/add-member-request.dto';
 import { TeamRequestDto } from 'src/modules/teams/dtos/requests/team-request.dto';
+import { MemberResponse } from 'src/modules/teams/dtos/responses/member-response.dto';
 import { TeamResponse } from 'src/modules/teams/dtos/responses/team-response.dto';
+import { AddMember } from 'src/modules/teams/usecases/add-member.usecase';
 import { CreateTeam } from 'src/modules/teams/usecases/create.usecase';
 import { FindTeamByUser } from 'src/modules/teams/usecases/find-by-user.usecase';
 
 @Injectable()
 export class TeamsService {
-  constructor(
-    private readonly plansService: PlansService,
-    private readonly repository: TeamRepository,
-  ) {}
+  @Inject(AddMember.UseCase)
+  private readonly addMemberUsecase: AddMember.UseCase;
+  @Inject(CreateTeam.UseCase)
+  private readonly createTeamUsecase: CreateTeam.UseCase;
+  @Inject(FindTeamByUser.UseCase)
+  private readonly findTeamByUserUsecase: FindTeamByUser.UseCase;
+
+  @Inject(PlansService) private readonly plansService: PlansService;
+  @Inject(forwardRef(() => AuthService))
+  private readonly authService: AuthService;
+
+  constructor() {}
 
   async create(
     authUser: AuthenticatedUserDto,
     data: TeamRequestDto,
   ): Promise<TeamResponse.Dto> {
     const planId = this.plansService.getStarterPlanId();
-    const create = new CreateTeam.UseCase(this.repository);
-    return await create.execute({
+    return await this.createTeamUsecase.execute({
       name: data.name,
       slug: data.slug,
       planId,
@@ -28,8 +40,25 @@ export class TeamsService {
     });
   }
 
+  async addMember(
+    authUser: AuthenticatedUserDto,
+    teamId: string,
+    data: AddMemberRequestDto,
+  ): Promise<MemberResponse.Dto> {
+    const roleMapper = {
+      admin: MemberRole.ADMIN,
+      member: MemberRole.MEMBER,
+    };
+    const role = data.role ? roleMapper[data.role] : undefined;
+    await this.authService.verifyTeamAdminToken(authUser, teamId);
+    return await this.addMemberUsecase.execute({
+      userId: data.userId,
+      teamId,
+      role,
+    });
+  }
+
   async findByUser(userId: string) {
-    const find = new FindTeamByUser.UseCase(this.repository);
-    return await find.execute({ userId });
+    return await this.findTeamByUserUsecase.execute({ userId });
   }
 }

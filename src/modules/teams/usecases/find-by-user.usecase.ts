@@ -5,7 +5,7 @@ import { IUseCase } from 'src/common/usecases/usecase.interface';
 import { TeamMemberEntity } from 'src/domain/teams/entities/member.entity';
 import { TeamEntity } from 'src/domain/teams/entities/team.entity';
 import { TeamRepository } from 'src/domain/teams/repositories/team.repository';
-import { TeamMemberResponse } from 'src/modules/teams/dtos/responses/team-member-response.dto';
+import { MemberResponse } from 'src/modules/teams/dtos/responses/member-response.dto';
 import { TeamResponse } from 'src/modules/teams/dtos/responses/team-response.dto';
 
 export namespace FindTeamByUser {
@@ -13,7 +13,7 @@ export namespace FindTeamByUser {
     userId: string;
   };
   export type Output = SearchResult<
-    { team: TeamResponse.Dto } & { membership: TeamMemberResponse.Dto }
+    { team: TeamResponse.Dto } & { membership: MemberResponse.Dto }
   >;
 
   export class UseCase implements IUseCase<Input, Output> {
@@ -32,7 +32,7 @@ export namespace FindTeamByUser {
         { team: TeamEntity } & { membership: TeamMemberEntity }
       >,
     ): SearchResult<
-      { team: TeamResponse.Dto } & { membership: TeamMemberResponse.Dto }
+      { team: TeamResponse.Dto } & { membership: MemberResponse.Dto }
     > {
       const responses =
         entityResult.items && entityResult.items.length

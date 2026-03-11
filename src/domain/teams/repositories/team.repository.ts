@@ -6,11 +6,9 @@ import { AppQuery } from 'src/common/utils/app-queries/app-query';
 import { TeamMemberEntity } from 'src/domain/teams/entities/member.entity';
 import { TeamEntity } from 'src/domain/teams/entities/team.entity';
 
-interface ITeamRepository extends IRepository<TeamEntity> {}
-
 export abstract class TeamRepository
   extends Repository
-  implements ITeamRepository
+  implements IRepository<TeamEntity>
 {
   protected get searchableFields(): string[] {
     return [...this.searchableFields, 'name', 'slug'];
@@ -31,6 +29,7 @@ export abstract class TeamRepository
     queries: AppQuery[],
   ): Promise<SearchResult<TeamEntity>>;
   abstract create(item: TeamEntity): Promise<TeamEntity>;
+  abstract addMember(member: TeamMemberEntity): Promise<TeamMemberEntity>;
   abstract update(id: string, item: TeamEntity): Promise<TeamEntity>;
   abstract delete(id: string): Promise<TeamEntity>;
 }

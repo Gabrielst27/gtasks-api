@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+import { forwardRef, Module } from '@nestjs/common';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { UsersModule } from 'src/modules/users/users.module';
@@ -15,7 +15,7 @@ import { TeamsModule } from 'src/modules/teams/teams.module';
     AuthJwtModule,
     SharedModule,
     MailModule,
-    TeamsModule,
+    forwardRef(() => TeamsModule),
   ],
   controllers: [AuthController],
   providers: [AuthService],
