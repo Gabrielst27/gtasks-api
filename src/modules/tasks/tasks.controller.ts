@@ -15,7 +15,7 @@ import { ApiResponse } from '@nestjs/swagger';
 import { AuthenticatedUser } from 'src/common/decorators/authenticated-user/authenticated-user.decorator';
 import { SearchManyRequestDto } from 'src/common/dtos/requests/search-many-request.dto';
 import { SearchResult } from 'src/common/repositories/search-result';
-import { AuthenticatedUserDto } from 'src/modules/auth/dtos/authenticated-user.dto';
+import { AuthenticatedUserModel } from 'src/domain/auth/models/authenticated-user.model';
 import { JwtAuthGuard } from 'src/modules/auth/jwt/guards/jwt-auth.guard';
 import { ProjectIdRequestDto } from 'src/modules/tasks/dtos/requests/project-id-request.dto';
 import { TaskRequestDto } from 'src/modules/tasks/dtos/requests/task-request.dto';
@@ -51,7 +51,7 @@ export class TasksController {
     type: TaskResponse.Dto,
   })
   create(
-    @AuthenticatedUser() authUser: AuthenticatedUserDto,
+    @AuthenticatedUser() authUser: AuthenticatedUserModel,
     @Param() params: ProjectIdRequestDto,
     @Body() data: TaskRequestDto,
   ) {

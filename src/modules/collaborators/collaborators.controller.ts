@@ -12,7 +12,7 @@ import { ApiResponse } from '@nestjs/swagger';
 import { AuthenticatedUser } from 'src/common/decorators/authenticated-user/authenticated-user.decorator';
 import { SearchManyRequestDto } from 'src/common/dtos/requests/search-many-request.dto';
 import { SearchResult } from 'src/common/repositories/search-result';
-import { AuthenticatedUserDto } from 'src/modules/auth/dtos/authenticated-user.dto';
+import { AuthenticatedUserModel } from 'src/domain/auth/models/authenticated-user.model';
 import { JwtAuthGuard } from 'src/modules/auth/jwt/guards/jwt-auth.guard';
 import { CollaboratorsService } from 'src/modules/collaborators/collaborators.service';
 import { AddCollaboratorRequestDto } from 'src/modules/collaborators/dtos/requests/add-collaborator-request.dto';
@@ -31,7 +31,7 @@ export class CollaboratorsController {
     type: CollaboratorResponse.Dto,
   })
   add(
-    @AuthenticatedUser() author: AuthenticatedUserDto,
+    @AuthenticatedUser() author: AuthenticatedUserModel,
     @Param('projectId', ParseUUIDPipe) projectId,
     @Body() data: AddCollaboratorRequestDto,
   ) {
@@ -43,7 +43,7 @@ export class CollaboratorsController {
   findAllByProject(
     @Param('projectId', ParseUUIDPipe) projectId: string,
     @Query() params: SearchManyRequestDto,
-    @AuthenticatedUser() authUser: AuthenticatedUserDto,
+    @AuthenticatedUser() authUser: AuthenticatedUserModel,
   ) {
     return this.service.findAll(authUser, projectId, params);
   }

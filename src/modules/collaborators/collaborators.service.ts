@@ -2,7 +2,7 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { SearchManyRequestDto } from 'src/common/dtos/requests/search-many-request.dto';
 import { SearchResult } from 'src/common/repositories/search-result';
 import { CollaboratorRepository } from 'src/domain/collaborators/repositories/collaborator.repository';
-import { AuthenticatedUserDto } from 'src/modules/auth/dtos/authenticated-user.dto';
+import { AuthenticatedUserModel } from 'src/domain/auth/models/authenticated-user.model';
 import { AddCollaboratorRequestDto } from 'src/modules/collaborators/dtos/requests/add-collaborator-request.dto';
 import { CollaboratorResponse } from 'src/modules/collaborators/dtos/responses/collaborator-response.dto';
 import { AddCollaborator } from 'src/modules/collaborators/usecases/add.usecase';
@@ -17,7 +17,7 @@ export class CollaboratorsService {
   ) {}
 
   async add(
-    author: AuthenticatedUserDto,
+    author: AuthenticatedUserModel,
     projectId: string,
     data: AddCollaboratorRequestDto,
   ): Promise<CollaboratorResponse.Dto> {
@@ -27,7 +27,7 @@ export class CollaboratorsService {
   }
 
   async findAll(
-    authUser: AuthenticatedUserDto,
+    authUser: AuthenticatedUserModel,
     projectId: string,
     params: SearchManyRequestDto,
   ): Promise<SearchResult<CollaboratorResponse.Dto>> {

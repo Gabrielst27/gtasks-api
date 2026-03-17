@@ -8,7 +8,7 @@ import { CreateTaskUseCase } from 'src/modules/tasks/usecases/create.usecase';
 import { FindTaskByIdUseCase } from 'src/modules/tasks/usecases/find-by-id.usecase';
 import { UpdateTaskUseCase } from 'src/modules/tasks/usecases/update.usecase';
 import { SearchTasksUseCase } from 'src/modules/tasks/usecases/search.usecase';
-import { AuthenticatedUserDto } from 'src/modules/auth/dtos/authenticated-user.dto';
+import { AuthenticatedUserModel } from 'src/domain/auth/models/authenticated-user.model';
 
 @Injectable()
 export class TasksService {
@@ -31,7 +31,7 @@ export class TasksService {
   }
 
   async create(
-    authUser: AuthenticatedUserDto,
+    authUser: AuthenticatedUserModel,
     projectId: string,
     request: TaskRequestDto,
   ): Promise<TaskResponse.Dto> {

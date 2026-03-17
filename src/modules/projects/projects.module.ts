@@ -7,12 +7,15 @@ import { ProjectsPrismaRepository } from 'src/modules/projects/repositories/pris
 import { AuthService } from 'src/modules/auth/auth.service';
 import { AuthModule } from 'src/modules/auth/auth.module';
 import { ProjectRepository } from 'src/domain/projects/repositories/projects.repository';
+import { PermissionsModule } from 'src/modules/permissions/permissions.module';
+import { PermissionsFactory } from 'src/modules/permissions/permissions';
 
 @Module({
-  imports: [SharedModule, AuthModule],
+  imports: [SharedModule, AuthModule, PermissionsModule],
   controllers: [ProjectsController],
   providers: [
     PrismaService,
+    PermissionsFactory,
     {
       provide: 'Repository',
       useFactory: (prismaService: PrismaService) => {
@@ -22,10 +25,14 @@ import { ProjectRepository } from 'src/domain/projects/repositories/projects.rep
     },
     {
       provide: ProjectsService,
-      useFactory: (repository: ProjectRepository, authService: AuthService) => {
-        return new ProjectsService(repository, authService);
+      useFactory: (
+        repository: ProjectRepository,
+        authService: AuthService,
+        permissionsFactory: PermissionsFactory,
+      ) => {
+        return new ProjectsService(repository, authService, permissionsFactory);
       },
-      inject: ['Repository', AuthService],
+      inject: ['Repository', AuthService, PermissionsFactory],
     },
   ],
   exports: [ProjectsService],

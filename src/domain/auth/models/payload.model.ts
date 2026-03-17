@@ -10,10 +10,16 @@ export namespace Payload {
     purpose: TokenPurposes;
   };
 
+  export type Membership = {
+    id: string;
+    role: MemberRole;
+    planId: string;
+  };
+
   export type AuthProps = {
     name: string;
     email: string;
-    teams: { id: string; role: MemberRole; planId: string }[];
+    teams: Membership[];
   } & Props;
 
   export type ResetPasswordProps = { email: string } & Props;
@@ -33,20 +39,20 @@ export namespace Payload {
       if (purpose === TokenPurposes.AUTHENTICATION) {
         const userTeams =
           teams?.length && membership?.length
-            ? teams.map((team) => {
-                const planId = team.planId;
-                const membershipInfo = membership.find(
-                  (m) => m.teamId === team.id,
-                );
-                if (!membershipInfo) {
-                  return;
-                }
-                return {
-                  id: team.id,
-                  role: membershipInfo.role,
-                  planId,
-                };
-              })
+            ? teams
+                .map((team) => {
+                  const planId = team.planId;
+                  const membershipInfo = membership.find(
+                    (m) => m.teamId === team.id,
+                  );
+                  if (!membershipInfo) return null;
+                  return {
+                    id: team.id,
+                    role: membershipInfo.role,
+                    planId,
+                  };
+                })
+                .filter(Boolean)
             : [];
         return {
           sub: user.id,

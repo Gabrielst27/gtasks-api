@@ -4,7 +4,7 @@ import {
   Inject,
   Injectable,
 } from '@nestjs/common';
-import { AuthenticatedUserDto } from 'src/modules/auth/dtos/authenticated-user.dto';
+import { AuthenticatedUserModel } from 'src/domain/auth/models/authenticated-user.model';
 import { ResetPasswordDto } from 'src/modules/auth/dtos/requests/reset-password.dto';
 import { SignInDto } from 'src/modules/auth/dtos/requests/sign-in.dto';
 import { SignUpDto } from 'src/modules/auth/dtos/requests/sign-up.dto';
@@ -15,7 +15,7 @@ import { UsersService } from 'src/modules/users/users.service';
 import { TokenPurposes } from 'src/modules/auth/token-purposes.enum';
 import { MailService } from 'src/modules/mail/mail.service';
 import { TeamsService } from 'src/modules/teams/teams.service';
-import { MemberRole } from 'src/domain/teams/enums/member-role.enum';
+import { Payload } from 'src/domain/auth/models/payload.model';
 
 @Injectable()
 export class AuthService {
@@ -74,17 +74,15 @@ export class AuthService {
     return { message: 'Senha redefinida com sucesso' };
   }
 
-  verifyTeamAdminToken(authUser: AuthenticatedUserDto, teamId: string): void {
+  verifyMembership(
+    authUser: AuthenticatedUserModel,
+    teamId: string,
+  ): Payload.Membership {
     const payload = this.jwtService.verifyAuthToken(authUser.token);
     const membership = payload.teams.find((team) => team.id === teamId);
     if (!membership) {
       throw new ForbiddenException('Usuário não pertence à equipe');
     }
-    if (
-      membership.role !== MemberRole.ADMIN &&
-      membership.role !== MemberRole.OWNER
-    ) {
-      throw new ForbiddenException('Usuário não tem permissão');
-    }
+    return membership;
   }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 import { SearchManyRequestDto } from 'src/common/dtos/requests/search-many-request.dto';
 import { ProjectRequestDto } from 'src/modules/projects/dtos/requests/project-request.dto';
 import { ProjectResponse } from 'src/modules/projects/dtos/responses/project-response.dto';
@@ -8,15 +8,19 @@ import { UpdateProjectUseCase } from 'src/modules/projects/usecases/update.useca
 import { FindAllProjectsUseCase } from 'src/modules/projects/usecases/find-all.usecase';
 import { SearchResult } from 'src/common/repositories/search-result';
 import { FindProjectBySlugUseCase } from 'src/modules/projects/usecases/find-by-slug.usecase';
-import { AuthenticatedUserDto } from 'src/modules/auth/dtos/authenticated-user.dto';
+import { AuthenticatedUserModel } from 'src/domain/auth/models/authenticated-user.model';
 import { AuthService } from 'src/modules/auth/auth.service';
 import { ProjectRepository } from 'src/domain/projects/repositories/projects.repository';
+import { PermissionsFactory } from 'src/modules/permissions/permissions';
+import { Action } from 'src/common/enum/action.enum';
+import { ProjectEntity } from 'src/domain/projects/entities/project.entity';
 
 @Injectable()
 export class ProjectsService {
   constructor(
     private repository: ProjectRepository,
     private readonly authService: AuthService,
+    private readonly permissionsFactory: PermissionsFactory,
   ) {}
 
   async findAll(
@@ -37,11 +41,21 @@ export class ProjectsService {
   }
 
   async create(
-    authUser: AuthenticatedUserDto,
+    authUser: AuthenticatedUserModel,
     teamId: string,
     data: ProjectRequestDto,
   ) {
-    this.authService.verifyTeamAdminToken(authUser, teamId);
+    const membership = this.authService.verifyMembership(authUser, teamId);
+    const ability = this.permissionsFactory.createForPayload(
+      authUser,
+      membership,
+    );
+    const canCreate = ability.can(Action.Create, ProjectEntity);
+    if (!canCreate) {
+      throw new ForbiddenException(
+        'Usuário não tem permissão para criar projetos',
+      );
+    }
     const usecase = new CreateProjectUseCase.UseCase(this.repository);
     return await usecase.execute({ ...data, createdById: authUser.id, teamId });
   }
@@ -49,10 +63,9 @@ export class ProjectsService {
   async update(
     id: string,
     data: ProjectRequestDto,
-    authUser: AuthenticatedUserDto,
+    authUser: AuthenticatedUserModel,
     teamId: string,
   ) {
-    this.authService.verifyTeamAdminToken(authUser, teamId);
     const usecase = new UpdateProjectUseCase.UseCase(this.repository);
     return await usecase.execute({ ...data, id });
   }

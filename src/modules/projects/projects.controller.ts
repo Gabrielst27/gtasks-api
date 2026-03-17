@@ -13,7 +13,7 @@ import { ApiResponse } from '@nestjs/swagger';
 import { AuthenticatedUser } from 'src/common/decorators/authenticated-user/authenticated-user.decorator';
 import { SearchManyRequestDto } from 'src/common/dtos/requests/search-many-request.dto';
 import { SearchResult } from 'src/common/repositories/search-result';
-import { AuthenticatedUserDto } from 'src/modules/auth/dtos/authenticated-user.dto';
+import { AuthenticatedUserModel } from 'src/domain/auth/models/authenticated-user.model';
 import { JwtAuthGuard } from 'src/modules/auth/jwt/guards/jwt-auth.guard';
 import { FindProjectBySlugRequestDto } from 'src/modules/projects/dtos/requests/find-by-slug-request.dto';
 import { ProjectRequestDto } from 'src/modules/projects/dtos/requests/project-request.dto';
@@ -57,7 +57,7 @@ export class ProjectsController {
     type: ProjectResponse.Dto,
   })
   create(
-    @AuthenticatedUser() authUser: AuthenticatedUserDto,
+    @AuthenticatedUser() authUser: AuthenticatedUserModel,
     @Param('teamId') teamId: string,
     @Body() data: ProjectRequestDto,
   ) {
@@ -72,7 +72,7 @@ export class ProjectsController {
     @Param('id', ParseUUIDPipe) id: string,
     @Param('teamId', ParseUUIDPipe) teamId: string,
     @Body() data: ProjectRequestDto,
-    @AuthenticatedUser() authUser: AuthenticatedUserDto,
+    @AuthenticatedUser() authUser: AuthenticatedUserModel,
   ) {
     return this.projectsService.update(id, data, authUser, teamId);
   }

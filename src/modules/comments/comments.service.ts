@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { CommentRepository } from 'src/domain/comments/repositories/comment.repository';
-import { AuthenticatedUserDto } from 'src/modules/auth/dtos/authenticated-user.dto';
+import { AuthenticatedUserModel } from 'src/domain/auth/models/authenticated-user.model';
 import { CommentRequestDto } from 'src/modules/comments/dto/requests/comments-request.dto';
 import { CommentsResponse } from 'src/modules/comments/dto/responses/comments-response.dto';
 import { CreateComment } from 'src/modules/comments/usecases/create.usecase';
@@ -10,7 +10,7 @@ export class CommentsService {
   constructor(private readonly repository: CommentRepository) {}
 
   async create(
-    authUser: AuthenticatedUserDto,
+    authUser: AuthenticatedUserModel,
     taskId: string,
     data: CommentRequestDto,
   ): Promise<CommentsResponse.Dto> {

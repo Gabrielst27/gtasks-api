@@ -1,8 +1,9 @@
 import { forwardRef, Inject, Injectable } from '@nestjs/common';
+import { Action } from 'src/common/enum/action.enum';
 import { MemberRole } from 'src/domain/teams/enums/member-role.enum';
 import { TeamRepository } from 'src/domain/teams/repositories/team.repository';
 import { AuthService } from 'src/modules/auth/auth.service';
-import { AuthenticatedUserDto } from 'src/modules/auth/dtos/authenticated-user.dto';
+import { AuthenticatedUserModel } from 'src/domain/auth/models/authenticated-user.model';
 import { PlansService } from 'src/modules/plans/plans.service';
 import { AddMemberRequestDto } from 'src/modules/teams/dtos/requests/add-member-request.dto';
 import { TeamRequestDto } from 'src/modules/teams/dtos/requests/team-request.dto';
@@ -28,7 +29,7 @@ export class TeamsService {
   constructor() {}
 
   async create(
-    authUser: AuthenticatedUserDto,
+    authUser: AuthenticatedUserModel,
     data: TeamRequestDto,
   ): Promise<TeamResponse.Dto> {
     const planId = this.plansService.getStarterPlanId();
@@ -41,7 +42,7 @@ export class TeamsService {
   }
 
   async addMember(
-    authUser: AuthenticatedUserDto,
+    authUser: AuthenticatedUserModel,
     teamId: string,
     data: AddMemberRequestDto,
   ): Promise<MemberResponse.Dto> {
@@ -50,7 +51,6 @@ export class TeamsService {
       member: MemberRole.MEMBER,
     };
     const role = data.role ? roleMapper[data.role] : undefined;
-    await this.authService.verifyTeamAdminToken(authUser, teamId);
     return await this.addMemberUsecase.execute({
       userId: data.userId,
       teamId,

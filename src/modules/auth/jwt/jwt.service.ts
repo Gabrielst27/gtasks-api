@@ -2,10 +2,10 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { Token } from 'src/modules/auth/dtos/token.dto';
 import { TokenPurposes } from 'src/modules/auth/token-purposes.enum';
-import { Payload } from 'src/modules/auth/jwt/dtos/payload.dto';
 import { UserResponse } from 'src/modules/users/dtos/responses/user-response.dto';
 import { TeamResponse } from 'src/modules/teams/dtos/responses/team-response.dto';
 import { MemberResponse } from 'src/modules/teams/dtos/responses/member-response.dto';
+import { Payload } from 'src/domain/auth/models/payload.model';
 
 @Injectable()
 export class AuthJwtService {
