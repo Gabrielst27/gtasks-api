@@ -1,11 +1,11 @@
 export enum EDbOperators {
   EQUALS = 'equals',
   IN = 'in',
-  NOT_IN = 'notin',
-  LESSER_THAN = 'lt',
-  LESSER_THAN_OR_EQUAL = 'lte',
-  GREATER_THAN = 'gt',
-  GREATER_THAN_OR_EQUAL = 'gte',
+  NOT_IN = 'not_in',
+  LESSER_THAN = 'lesser_than',
+  LESSER_THAN_OR_EQUAL = 'lesser_than_or_equal',
+  GREATER_THAN = 'greater_than',
+  GREATER_THAN_OR_EQUAL = 'greater_than_or_equal',
   NOT = 'not',
   CONTAINS = 'contains',
 }

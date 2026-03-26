@@ -2,9 +2,31 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ProjectsModule } from './modules/projects/projects.module';
+import { SharedModule } from './modules/shared/shared.module';
+import { ConfigModule } from '@nestjs/config';
+import { TasksModule } from './modules/tasks/tasks.module';
+import { UsersModule } from './modules/users/users.module';
+import { AuthModule } from './modules/auth/auth.module';
+import { CollaboratorsModule } from './modules/collaborators/collaborators.module';
+import { CommentsModule } from './modules/comments/comments.module';
+import { MailModule } from './modules/mail/mail.module';
+import { TeamsModule } from './modules/teams/teams.module';
+import { PlansModule } from './modules/plans/plans.module';
 
 @Module({
-  imports: [ProjectsModule],
+  imports: [
+    ProjectsModule,
+    SharedModule,
+    ConfigModule.forRoot({ isGlobal: true }),
+    TasksModule,
+    UsersModule,
+    AuthModule,
+    CollaboratorsModule,
+    CommentsModule,
+    MailModule,
+    TeamsModule,
+    PlansModule,
+  ],
   controllers: [AppController],
   providers: [AppService],
 })

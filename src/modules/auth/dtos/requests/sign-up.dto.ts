@@ -1,0 +1,40 @@
+import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUrl,
+  Matches,
+  MaxLength,
+  MinLength,
+} from 'class-validator';
+
+export class SignUpDto {
+  @ApiProperty({ description: 'Nome do usuário' })
+  @IsNotEmpty({ message: 'O nome não pode estar vazio' })
+  @Matches(/^[\p{L}\s]+$/u, {
+    message: 'Apenas letras e espaço em branco são permitidos no nome',
+  })
+  name: string;
+
+  @ApiProperty({ description: 'Email do usuário', uniqueItems: true })
+  @IsNotEmpty({ message: 'O email não pode estar vazio' })
+  @IsEmail({}, { message: 'O email deve estar no formato de email' })
+  email: string;
+
+  @ApiProperty({ description: 'Senha do usuário', minLength: 6, maxLength: 64 })
+  @IsNotEmpty({ message: 'A senha não pode estar vazia' })
+  @IsString({ message: 'A senha deve ser string' })
+  @MinLength(6, { message: 'A senha deve ter, no mínimo, 6 caracteres' })
+  @MaxLength(64, { message: 'A senha pode conter no máximo 64 caracteres' })
+  password: string;
+
+  @IsOptional()
+  @IsUrl({}, { message: 'O avatar deve ser uma url' })
+  @ApiProperty({
+    description: 'Url da imagem de avatar do usuário',
+    required: false,
+  })
+  avatar?: string;
+}

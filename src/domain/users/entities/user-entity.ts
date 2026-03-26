@@ -1,0 +1,24 @@
+import { Entity, EntityProps } from 'src/common/entities/entity';
+
+export type UserEntityProps = {
+  name: string;
+  email: string;
+  password: string;
+  avatar?: string;
+  disabledAt?: Date;
+} & EntityProps;
+
+export class UserEntity extends Entity<UserEntityProps> {
+  constructor(props: UserEntityProps, id?: string) {
+    //TODO: Create user entity validation
+    props.disabledAt = props.disabledAt ?? undefined;
+    props.avatar = props.avatar ?? undefined;
+    super(props, id);
+  }
+
+  updatePassword(password: string): void {
+    //TODO: Create user entity validation
+    const props = { ...this.props, password };
+    super.updateProps(props);
+  }
+}
